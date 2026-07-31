@@ -14,8 +14,6 @@
   <a href="https://repartgit.netlify.app/dashboard">Dashboard</a>
   |
   <a href="https://repartgit.netlify.app/developers">Developers Page</a>
-  |
-  <a href="https://github.com/sanketpadhyal/Repart">GitHub Repository</a>
 </p>
 
 <p align="center">
