@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="frontend/public/assets/logo.png" alt="Repart Logo" width="96" />
+  <img src="public/assets/logo.png" alt="Repart Logo" width="96" />
 </p>
 
 <h1 align="center">Repart</h1>
