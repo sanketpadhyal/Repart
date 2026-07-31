@@ -1,0 +1,69 @@
+.bottom-bar-container {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background-color: #ffffff;
+  border-top: 1px solid #e4e4e7;
+  z-index: 999;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 8px;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.bottom-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  background: none;
+  border: none;
+  color: #71717a;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 6px 4px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  outline: none !important;
+  user-select: none;
+}
+
+.bottom-bar-item.active {
+  color: #8c6b22;
+  background-color: #fefce8;
+  font-weight: 600;
+}
+
+/* Mobile Featured Outline for Analyze */
+.bottom-bar-item.feature-hero-item {
+  background-color: #fafafa;
+  border: 1.5px solid #8c6b22;
+  border-radius: 14px;
+  color: #18181b;
+  font-weight: 700;
+  padding: 5px 9px;
+  transition: all 0.2s ease;
+}
+
+.bottom-bar-item.feature-hero-item.active {
+  background-color: #fefce8;
+  border-color: #8c6b22;
+  color: #8c6b22;
+  font-weight: 800;
+}
+
+@media (max-width: 768px) {
+  .bottom-bar-container {
+    display: flex;
+  }
+}

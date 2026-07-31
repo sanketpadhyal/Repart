@@ -1,0 +1,243 @@
+.duel-feat-section {
+  padding: 80px 24px;
+  background: #ffffff;
+  border-top: 1px solid #e4e4e7;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.duel-feat-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.duel-gaming-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #18181b;
+  color: #fde68a;
+  border: 1.5px solid #8c6b22;
+  padding: 6px 18px;
+  border-radius: 100px;
+  box-shadow: 0 4px 16px rgba(140, 107, 34, 0.25);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.gaming-icon {
+  font-size: 14px;
+}
+
+.gaming-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #fde68a;
+  text-transform: uppercase;
+}
+
+.gaming-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: liveGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes liveGlow {
+  from { opacity: 0.4; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1.2); }
+}
+
+.duel-feat-title {
+  font-family: 'Times New Roman', Georgia, serif;
+  font-size: 38px;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 12px 0;
+}
+
+.duel-gold-text {
+  color: #8c6b22;
+}
+
+.duel-feat-subtitle {
+  font-size: 16px;
+  color: #71717a;
+  max-width: 680px;
+  margin: 0 auto 36px auto;
+  line-height: 1.6;
+}
+
+/* Mock Duel Card */
+.duel-mock-card {
+  background: #fafafa;
+  border: 1.5px solid #e4e4e7;
+  border-radius: 24px;
+  padding: 28px;
+  max-width: 720px;
+  margin: 0 auto 32px auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.mock-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.mock-user-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mock-avatar-wrap {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.mock-avatar-icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  border: 2px solid #8c6b22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.mock-avatar-icon-circle.left {
+  background: #fefce8;
+  border-color: #8c6b22;
+  color: #8c6b22;
+}
+
+.mock-avatar-icon-circle.right {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #2563eb;
+}
+
+.mock-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 100px;
+  color: #ffffff;
+}
+
+.mock-badge.mvp { background: #16a34a; }
+.mock-badge.reach { background: #8c6b22; }
+
+.mock-user-box h4 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #18181b;
+  margin: 0 0 2px 0;
+}
+
+.mock-handle {
+  font-size: 12px;
+  color: #71717a;
+  margin-bottom: 10px;
+}
+
+.mock-score-box {
+  background: #ffffff;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 6px 14px;
+  text-align: center;
+}
+
+.mock-score-box.reach {
+  border-color: #fde68a;
+}
+
+.mock-score-box .lbl {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #16a34a;
+  display: block;
+}
+
+.mock-score-box.reach .lbl {
+  color: #8c6b22;
+}
+
+.mock-score-box .val {
+  font-size: 20px;
+  font-weight: 900;
+  color: #18181b;
+}
+
+.mock-vs {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #8c6b22;
+  font-weight: 900;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mock-verdict-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: #3f3f46;
+}
+
+.mock-verdict-bar .v-icon { color: #16a34a; }
+
+.duel-cta-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.duel-launch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 100px;
+  padding: 14px 32px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.25);
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.duel-launch-btn:active {
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  .duel-feat-title { font-size: 28px; }
+  .mock-card-top { flex-direction: column; }
+}
