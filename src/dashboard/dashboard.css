@@ -255,6 +255,21 @@ body:has(.dashboard-layout) {
   font-weight: 800;
 }
 
+.pi-lang-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 4px 4px;
+  color: #a1a1aa;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.pi-lang-empty svg {
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
 /* Sidebar Styles */
 .dashboard-sidebar {
   width: 260px;
