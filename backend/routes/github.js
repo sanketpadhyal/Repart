@@ -23,7 +23,12 @@ function normaliseRepo(r) {
     private: r.private || false,
     visibility: r.visibility || (r.private ? 'private' : 'public'),
     updated_at: r.updated_at || '',
-    topics: r.topics || []
+    pushed_at: r.pushed_at || '',
+    topics: r.topics || [],
+    size: r.size || 0,
+    license: r.license || null,
+    open_issues_count: r.open_issues_count || 0,
+    archived: r.archived || false
   };
 }
 
@@ -49,11 +54,13 @@ router.get('/user-full/:username', async (req, res) => {
         if (pinnedBlocks.length > 0) {
           reposData = pinnedBlocks.map((b, idx) => {
             const block = b[0];
-            const nameMatch = block.match(/href="\/[^/]+\/([^"/]+)"/);
-            const descMatch = block.match(/class="[^"]*pinned-item-desc[^"]*"[^>]*>\s*([\s\S]*?)\s*<\/p>/);
-            const langMatch = block.match(/itemprop="programmingLanguage"[^>]*>\s*([^<\n]+)/);
-            const starMatch = block.match(/stargazers"[^>]*>\s*[\s\S]*?([\d,]+)\s*<\/a>/i);
-            const forkMatch = block.match(/members"[^>]*>\s*[\s\S]*?([\d,]+)\s*<\/a>/i);
+            const nameMatch    = block.match(/href="\/[^/]+\/([^"/]+)"/);
+            const descMatch    = block.match(/class="[^"]*pinned-item-desc[^"]*"[^>]*>\s*([\s\S]*?)\s*<\/p>/);
+            const langMatch    = block.match(/itemprop="programmingLanguage"[^>]*>\s*([^<\n]+)/);
+            const starMatch    = block.match(/stargazers"[^>]*>\s*[\s\S]*?([\d,]+)\s*<\/a>/i);
+            const forkMatch    = block.match(/members"[^>]*>\s*[\s\S]*?([\d,]+)\s*<\/a>/i);
+            const timeMatch    = block.match(/<relative-time[^>]+datetime="([^"]+)"/);
+            const topicMatches = [...block.matchAll(/href="\/topics\/([^"]+)"/g)];
             const repoName = nameMatch ? nameMatch[1].trim() : `repo-${idx}`;
             return {
               id: idx + 1,
@@ -65,23 +72,25 @@ router.get('/user-full/:username', async (req, res) => {
               forks_count: forkMatch ? parseInt(forkMatch[1].replace(/,/g, '')) : 0,
               html_url: `https://github.com/${username}/${repoName}`,
               private: false,
-              is_pinned: true
+              is_pinned: true,
+              pushed_at: timeMatch ? timeMatch[1] : '',
+              topics: topicMatches.map(m => m[1])
             };
           });
         }
 
         if (!userData) {
-          const followersMatch = pageHtml.match(/([\d,]+)\s+followers/i);
-          const followingMatch = pageHtml.match(/([\d,]+)\s+following/i);
-          const repoCountMatch = pageHtml.match(/([\d,]+)\s+repositories/i);
+          const followersMatch  = pageHtml.match(/([\d,]+)\s+followers/i);
+          const followingMatch  = pageHtml.match(/([\d,]+)\s+following/i);
+          const repoCountMatch  = pageHtml.match(/([\d,]+)\s+repositories/i);
           userData = {
             login: username,
             name: username,
             avatar_url: `https://github.com/${username}.png`,
             bio: '',
-            followers: followersMatch ? parseInt(followersMatch[1].replace(/,/g, '')) : 0,
-            following: followingMatch ? parseInt(followingMatch[1].replace(/,/g, '')) : 0,
-            public_repos: repoCountMatch ? parseInt(repoCountMatch[1].replace(/,/g, '')) : 0
+            followers:    followersMatch  ? parseInt(followersMatch[1].replace(/,/g, ''))  : 0,
+            following:    followingMatch  ? parseInt(followingMatch[1].replace(/,/g, ''))  : 0,
+            public_repos: repoCountMatch  ? parseInt(repoCountMatch[1].replace(/,/g, '')) : 0
           };
         }
       }
@@ -111,11 +120,13 @@ router.get('/user-full/:username', async (req, res) => {
           if (blocks.length === 0) break;
           for (const b of blocks) {
             const block = b[0];
-            const nameMatch = block.match(/itemprop="name codeRepository"[^>]*>\s*([^<\n]+)/) || block.match(/href="\/[^/]+\/([^"/]+)"/);
-            const descMatch = block.match(/itemprop="description"[^>]*>\s*([\s\S]*?)\s*<\/p>/);
-            const langMatch = block.match(/itemprop="programmingLanguage"[^>]*>\s*([^<\n]+)/);
-            const starMatch = block.match(/href="\/[^/]+\/[^/]+\/stargazers"[^>]*>\s*([\d,]+)/);
-            const forkMatch = block.match(/href="\/[^/]+\/[^/]+\/network\/members"[^>]*>\s*([\d,]+)/);
+            const nameMatch    = block.match(/itemprop="name codeRepository"[^>]*>\s*([^<\n]+)/) || block.match(/href="\/[^/]+\/([^"/]+)"/);
+            const descMatch    = block.match(/itemprop="description"[^>]*>\s*([\s\S]*?)\s*<\/p>/);
+            const langMatch    = block.match(/itemprop="programmingLanguage"[^>]*>\s*([^<\n]+)/);
+            const starMatch    = block.match(/href="\/[^/]+\/[^/]+\/stargazers"[^>]*>\s*([\d,]+)/);
+            const forkMatch    = block.match(/href="\/[^/]+\/[^/]+\/network\/members"[^>]*>\s*([\d,]+)/);
+            const timeMatch    = block.match(/<relative-time[^>]+datetime="([^"]+)"/);
+            const topicMatches = [...block.matchAll(/href="\/topics\/([^"]+)"/g)];
             if (nameMatch) {
               const repoName = nameMatch[1].trim();
               allReposData.push({
@@ -127,7 +138,9 @@ router.get('/user-full/:username', async (req, res) => {
                 stargazers_count: starMatch ? parseInt(starMatch[1].replace(/,/g, '')) : 0,
                 forks_count: forkMatch ? parseInt(forkMatch[1].replace(/,/g, '')) : 0,
                 html_url: `https://github.com/${username}/${repoName}`,
-                private: false
+                private: false,
+                pushed_at: timeMatch ? timeMatch[1] : '',
+                topics: topicMatches.map(m => m[1])
               });
             }
           }
@@ -190,26 +203,50 @@ router.get('/user-full/:username', async (req, res) => {
     const langCounts = {};
 
     targetRepos.forEach(r => {
-      totalKb += (r.size || 60);
-      const lang = r.language || 'Other';
+      totalKb += (r.size && r.size > 0 ? r.size : 0);
+      const lang = r.language && r.language.trim();
       if (lang) {
         langCounts[lang] = (langCounts[lang] || 0) + 1;
       }
     });
 
-    const rawLOC = Math.max(14200, Math.round(totalKb * 42));
+    const rawLOC = Math.round(totalKb * 30);
     const formattedLOC = rawLOC >= 1000000
       ? `${(rawLOC / 1000000).toFixed(1)}M LOC`
       : rawLOC >= 1000
         ? `${Math.round(rawLOC / 1000)}k LOC`
         : `${rawLOC} LOC`;
 
-    const reposWithDesc = targetRepos.filter(r => r.description && r.description.length > 5).length;
-    const descRatio = targetRepos.length > 0 ? reposWithDesc / targetRepos.length : 1;
-    const securityScore = Math.min(98, Math.max(82, Math.round(88 + descRatio * 10)));
-    const securityGrade = securityScore >= 93 ? 'A+' : securityScore >= 85 ? 'A' : 'B+';
+    const total = targetRepos.length || 1;
+    const oneYearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
 
-    const testCoverageRatio = Math.min(92, Math.max(65, Math.round(72 + (targetRepos.length % 15))));
+    const reposWithLicense    = targetRepos.filter(r => r.license && r.license.key && r.license.key !== 'other').length;
+    const reposWithDesc       = targetRepos.filter(r => r.description && r.description.length > 5).length;
+    const reposWithTopics     = targetRepos.filter(r => r.topics && r.topics.length > 0).length;
+    const reposRecentlyPushed = targetRepos.filter(r => r.pushed_at && new Date(r.pushed_at) > oneYearAgo).length;
+    const totalOpenIssues     = targetRepos.reduce((sum, r) => sum + (r.open_issues_count || 0), 0);
+    const issuesPenalty       = Math.min(15, Math.round((totalOpenIssues / total) * 1.5));
+
+    const securityScore = Math.min(100, Math.max(0, Math.round(
+      (reposWithLicense    / total) * 40 +
+      (reposWithDesc       / total) * 25 +
+      (reposWithTopics     / total) * 20 +
+      (reposRecentlyPushed / total) * 15 -
+      issuesPenalty
+    )));
+    const securityGrade = securityScore >= 85 ? 'A+' : securityScore >= 70 ? 'A' : securityScore >= 55 ? 'B+' : securityScore >= 40 ? 'B' : 'C';
+
+    const TEST_CULTURE_LANGS   = ['TypeScript', 'Python', 'Java', 'Go', 'Rust', 'C#', 'Kotlin', 'Swift', 'Ruby', 'C++'];
+    const reposWithTestLang    = targetRepos.filter(r => TEST_CULTURE_LANGS.includes(r.language)).length;
+    const TEST_KEYWORDS        = /test|spec|jest|pytest|mocha|cypress|vitest|junit|rspec/i;
+    const reposWithTestKeyword = targetRepos.filter(r =>
+      TEST_KEYWORDS.test(r.name) || TEST_KEYWORDS.test(r.description)
+    ).length;
+    const testCoverageRatio = Math.min(100, Math.max(0, Math.round(
+      (reposWithTestLang    / total) * 55 +
+      (reposWithTestKeyword / total) * 35 +
+      (reposRecentlyPushed  / total) * 10
+    )));
 
     const totalLangRepos = Object.values(langCounts).reduce((a, b) => a + b, 0) || 1;
     const LANG_COLORS = {
@@ -257,12 +294,6 @@ router.get('/user-full/:username', async (req, res) => {
       analyzedReposCount: targetRepos.length
     };
 
-    if (totalCommits > 0 && currentStreak === 0) {
-      currentStreak = Math.max(1, Math.min(14, totalCommits % 17));
-    }
-    if (longestStreak <= currentStreak) {
-      longestStreak = Math.max(currentStreak + 8, 28);
-    }
     const weeklyVelocity = Math.max(1, Math.round(totalCommits / 52));
 
     res.json({

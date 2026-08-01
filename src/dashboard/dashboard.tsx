@@ -460,33 +460,43 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                   </div>
                 </div>
 
-                {portfolioAnalytics.languages && portfolioAnalytics.languages.length > 0 && (
-                  <div className="pi-lang-section">
-                    <div className="pi-lang-header">
-                      <span>Language Composition Ratio</span>
-                      <small>{portfolioAnalytics.languages.length} Languages Detected</small>
-                    </div>
-                    <div className="pi-lang-bar-wrap">
-                      {portfolioAnalytics.languages.map((l, i) => (
-                        <div
-                          key={i}
-                          className="pi-lang-seg"
-                          style={{ width: `${l.percent}%`, backgroundColor: l.color }}
-                          title={`${l.name}: ${l.percent}%`}
-                        />
-                      ))}
-                    </div>
-                    <div className="pi-lang-legend">
-                      {portfolioAnalytics.languages.slice(0, 5).map((l, i) => (
-                        <div key={i} className="pi-lang-legend-item">
-                          <span className="pi-lang-dot" style={{ backgroundColor: l.color }} />
-                          <span className="pi-lang-name">{l.name}</span>
-                          <strong className="pi-lang-pct">{l.percent}%</strong>
-                        </div>
-                      ))}
-                    </div>
+                <div className="pi-lang-section">
+                  <div className="pi-lang-header">
+                    <span>Language Composition Ratio</span>
+                    {portfolioAnalytics.languages && portfolioAnalytics.languages.length > 0
+                      ? <small>{portfolioAnalytics.languages.length} Language{portfolioAnalytics.languages.length > 1 ? 's' : ''} Detected</small>
+                      : <small>No language data available</small>
+                    }
                   </div>
-                )}
+                  {portfolioAnalytics.languages && portfolioAnalytics.languages.length > 0 ? (
+                    <>
+                      <div className="pi-lang-bar-wrap">
+                        {portfolioAnalytics.languages.map((l, i) => (
+                          <div
+                            key={i}
+                            className="pi-lang-seg"
+                            style={{ width: `${l.percent}%`, backgroundColor: l.color }}
+                            title={`${l.name}: ${l.percent}%`}
+                          />
+                        ))}
+                      </div>
+                      <div className="pi-lang-legend">
+                        {portfolioAnalytics.languages.slice(0, 5).map((l, i) => (
+                          <div key={i} className="pi-lang-legend-item">
+                            <span className="pi-lang-dot" style={{ backgroundColor: l.color }} />
+                            <span className="pi-lang-name">{l.name}</span>
+                            <strong className="pi-lang-pct">{l.percent}%</strong>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="pi-lang-empty">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                      <span>No language data detected across repositories</span>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -590,7 +600,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 22c4.2 0 7-2.8 7-6.7 0-3.1-1.8-5.3-4.6-7.7.1 2-1 3.2-2.3 3.9.2-3.7-1.4-6.6-4.2-9.5.1 4.5-3 6.9-3 10.5C4.9 18.1 7.7 22 12 22Z" /></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.currentStreak ?? 14} Days`}</span>
+                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.currentStreak ?? 0} Days`}</span>
                         <span className="activity-lbl">Current Streak</span>
                       </div>
                     </div>
@@ -600,7 +610,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.longestStreak ?? 42} Days`}</span>
+                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.longestStreak ?? 0} Days`}</span>
                         <span className="activity-lbl">Longest Streak</span>
                       </div>
                     </div>
@@ -610,7 +620,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.weeklyVelocity ?? Math.round((activityMetrics?.totalCommits || 1566) / 52)} / Wk`}</span>
+                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.weeklyVelocity ?? 0} / Wk`}</span>
                         <span className="activity-lbl">Weekly Commit Velocity</span>
                       </div>
                     </div>
