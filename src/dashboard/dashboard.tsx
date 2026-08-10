@@ -380,7 +380,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                   {[1,2,3].map(i => (
                     <div key={i} className="gh-stat-box skeleton-stat">
                       <div className="skeleton skeleton-stat-icon"></div>
-                      <div>
+                      <div className="skeleton-stat-text-group">
                         <div className="skeleton skeleton-stat-num"></div>
                         <div className="skeleton skeleton-stat-label"></div>
                       </div>
@@ -436,7 +436,26 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
             )}
 
             {/* HYPER-STRONG PORTFOLIO CODEBASE INTELLIGENCE WIDGET */}
-            {portfolioAnalytics && (
+            {isLoading ? (
+              <div className="portfolio-intelligence-card skeleton-card">
+                <div className="pi-card-header">
+                  <div className="skeleton skeleton-pi-title"></div>
+                  <div className="skeleton skeleton-pi-pill"></div>
+                </div>
+                <div className="pi-metrics-grid">
+                  {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="pi-metric-box skeleton-stat" style={{ padding: '16px' }}>
+                      <div className="skeleton skeleton-pi-metric-title"></div>
+                      <div className="skeleton skeleton-pi-metric-val"></div>
+                      <div className="skeleton skeleton-pi-metric-sub"></div>
+                    </div>
+                  ))}
+                </div>
+                <div className="pi-lang-section">
+                  <div className="skeleton skeleton-pi-lang-bar"></div>
+                </div>
+              </div>
+            ) : portfolioAnalytics ? (
               <div className="portfolio-intelligence-card fade-in">
                 <div className="pi-card-header">
                   <div className="pi-header-title-group">
@@ -483,6 +502,17 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                       <small className="pi-metric-sub">Verified test hygiene</small>
                     </div>
                   </div>
+
+                  <div className="pi-metric-box">
+                    <div className="pi-metric-icon arch">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M18 6A6 6 0 0 0 6 12v6"></path></svg>
+                    </div>
+                    <div>
+                      <span className="pi-metric-label">MODULARITY SCORE</span>
+                      <p className="pi-metric-value">{portfolioAnalytics.modularityRating}</p>
+                      <small className="pi-metric-sub">High component isolation</small>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Language Composition Ratio Bar */}
@@ -524,7 +554,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                   )}
                 </div>
               </div>
-            )}
+            ) : null}
 
 
 
@@ -630,7 +660,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ea580c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 22c4.2 0 7-2.8 7-6.7 0-3.1-1.8-5.3-4.6-7.7.1 2-1 3.2-2.3 3.9.2-3.7-1.4-6.6-4.2-9.5.1 4.5-3 6.9-3 10.5C4.9 18.1 7.7 22 12 22Z" /></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.currentStreak ?? 0} Days`}</span>
+                        {isLoading ? <div className="skeleton skeleton-streak-val"></div> : <span className="activity-val">{`${activityMetrics?.currentStreak ?? 0} Days`}</span>}
                         <span className="activity-lbl">Current Streak</span>
                       </div>
                     </div>
@@ -640,7 +670,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.longestStreak ?? 0} Days`}</span>
+                        {isLoading ? <div className="skeleton skeleton-streak-val"></div> : <span className="activity-val">{`${activityMetrics?.longestStreak ?? 0} Days`}</span>}
                         <span className="activity-lbl">Longest Streak</span>
                       </div>
                     </div>
@@ -650,7 +680,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9333ea" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : `${activityMetrics?.weeklyVelocity ?? 0} / Wk`}</span>
+                        {isLoading ? <div className="skeleton skeleton-streak-val"></div> : <span className="activity-val">{`${activityMetrics?.weeklyVelocity ?? 0} / Wk`}</span>}
                         <span className="activity-lbl">Weekly Commit Velocity</span>
                       </div>
                     </div>
@@ -660,7 +690,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"></circle><line x1="3" y1="12" x2="9" y2="12"></line><line x1="15" y1="12" x2="21" y2="12"></line></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : (activityMetrics?.totalCommits ?? 0).toLocaleString()}</span>
+                        {isLoading ? <div className="skeleton skeleton-streak-val"></div> : <span className="activity-val">{(activityMetrics?.totalCommits ?? 0).toLocaleString()}</span>}
                         <span className="activity-lbl">Total Commits</span>
                       </div>
                     </div>
@@ -670,7 +700,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                       </div>
                       <div>
-                        <span className="activity-val">{isLoading ? '...' : `${githubStats?.public_repos ?? 0} Repos`}</span>
+                        {isLoading ? <div className="skeleton skeleton-streak-val"></div> : <span className="activity-val">{`${githubStats?.public_repos ?? 0} Repos`}</span>}
                         <span className="activity-lbl">Active Projects</span>
                       </div>
                     </div>

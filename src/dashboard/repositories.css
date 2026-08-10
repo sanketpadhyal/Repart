@@ -289,9 +289,9 @@
 }
 
 .skeleton-box {
-  background: linear-gradient(90deg, #f5f5f4 25%, #e7e5e4 50%, #f5f5f4 75%);
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
   background-size: 200% 100%;
-  animation: skeletonShimmer 1.5s infinite;
+  animation: skeletonShimmer 1.5s ease-in-out infinite;
   border-radius: 6px;
 }
 
