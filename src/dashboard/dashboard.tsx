@@ -78,8 +78,11 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
   const [topRepos, setTopRepos] = useState<GitHubRepo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [repoUrl, setRepoUrl] = useState<string>('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [showLogoutModal, setShowLogoutModal] = useState<boolean>(false);
 
+  // Sync activeTab with URL pathname so refresh never resets the view
   useEffect(() => {
     if (location.pathname === '/dashboard/repositories') {
       setActiveTab('repositories');
@@ -92,6 +95,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
     }
   }, [location.pathname]);
 
+  // Reset scroll position to top on tab or route change
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.scrollTop = 0;
@@ -99,6 +103,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
   }, [activeTab, location.pathname]);
 
   useEffect(() => {
+    // Retrieve stored user details from OAuth login
     const storedUserStr = localStorage.getItem('repart_user');
     let username = '';
     let providerToken = '';
@@ -117,12 +122,14 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
       }
     }
 
+    // If no logged in user, redirect to auth login
     if (!username) {
       setIsLoading(false);
       navigate('/?login=true');
       return;
     }
 
+    // Check sessionStorage cache for fast instant rendering
     const cacheKey = `repart_gh_dash_v6_${username}`;
     const cachedStr = sessionStorage.getItem(cacheKey);
     if (cachedStr) {
@@ -141,6 +148,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
       }
     }
 
+    // Fetch 100% LIVE data for the authenticated user from backend API
     setIsLoading(true);
     const reqHeaders: Record<string, string> = {};
     if (providerToken) {
@@ -186,6 +194,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
             setPortfolioAnalytics(data.portfolioAnalytics);
           }
 
+          // Cache in sessionStorage
           sessionStorage.setItem(cacheKey, JSON.stringify({
             timestamp: Date.now(),
             stats: statsObj,
@@ -200,12 +209,27 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
         console.error("Error fetching live github data:", err);
         setIsLoading(false);
       });
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const confirmLogout = () => {
     localStorage.removeItem('repart_auth_token');
     localStorage.removeItem('repart_user');
     navigate('/');
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleAnalyze = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!repoUrl.trim()) return;
+    let cleanUrl = repoUrl.trim();
+    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+      cleanUrl = `https://github.com/${cleanUrl}`;
+    }
+    setIsAnalyzing(true);
+    setActiveTab('analyze');
+    navigate(`/dashboard/analyze?repo=${encodeURIComponent(cleanUrl)}`);
+    setIsAnalyzing(false);
   };
 
   const handleSelectRepo = (targetRepoUrl: string) => {
@@ -411,6 +435,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               </div>
             )}
 
+            {/* HYPER-STRONG PORTFOLIO CODEBASE INTELLIGENCE WIDGET */}
             {portfolioAnalytics && (
               <div className="portfolio-intelligence-card fade-in">
                 <div className="pi-card-header">
@@ -460,6 +485,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                   </div>
                 </div>
 
+                {/* Language Composition Ratio Bar */}
                 <div className="pi-lang-section">
                   <div className="pi-lang-header">
                     <span>Language Composition Ratio</span>
@@ -500,6 +526,9 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               </div>
             )}
 
+
+
+            {/* Top Repositories Section */}
             <section className="top-repos-section">
               <div className="section-title-row">
                 <h2>Recent Repositories</h2>
@@ -561,6 +590,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               </div>
             </section>
 
+            {/* GitHub Contributions Heatmap Section */}
             <section className="contributions-section">
               <div className="section-title-row">
                 <h2>{isLoading ? 'Loading activity...' : `${(activityMetrics?.totalCommits || 0).toLocaleString()} contributions in the last year`}</h2>
@@ -651,6 +681,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
           </div>
         )}
 
+        {/* TAB: REPOSITORIES */}
         {activeTab === 'repositories' && (
           <RepositoriesView 
             username={usernameHandle} 
@@ -658,6 +689,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
           />
         )}
 
+        {/* TAB: ANALYZE REPO */}
         {activeTab === 'analyze' && (() => {
           const repoParam = new URLSearchParams(location.search).get('repo');
           return repoParam
@@ -665,12 +697,14 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
             : <div className="tab-content fade-in" style={{ padding: 0 }}><AnalyzeRepo /></div>;
         })()}
 
+        {/* TAB: COMPARE ACCOUNTS */}
         {activeTab === 'compare' && (
           <div className="tab-content fade-in" style={{ padding: 0 }}>
             <AccountComparison currentUsername={usernameHandle} />
           </div>
         )}
 
+        {/* TAB 2: DIAGRAMS */}
         {activeTab === 'diagrams' && (
           <div className="tab-content fade-in">
             <header className="main-header">
@@ -708,6 +742,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
           </div>
         )}
 
+        {/* TAB 3: EXPLORER */}
         {activeTab === 'explorer' && (
           <div className="tab-content fade-in">
             <header className="main-header">
@@ -743,8 +778,10 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
         )}
       </main>
 
+      {/* Mobile Bottom Bar */}
       <BottomBar activeTab={activeTab} setActiveTab={setActiveTab} />
 
+      {/* Logout Confirmation Modal Overlay */}
       {showLogoutModal && (
         <div className="logout-modal-wrapper" onClick={() => setShowLogoutModal(false)}>
           <div className="logout-modal-panel" onClick={(e) => e.stopPropagation()}>

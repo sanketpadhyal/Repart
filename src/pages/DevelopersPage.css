@@ -1,3 +1,5 @@
+/* ── Repart Developers Page Styles (100% Mobile Optimized, Zero Popup Hover) ── */
+
 .dev-page {
   background-color: #fdfdfb;
   min-height: 100vh;
@@ -29,6 +31,7 @@
   }
 }
 
+/* Hero Section */
 .dev-hero {
   text-align: center;
   padding: 30px 10px 10px;
@@ -60,6 +63,7 @@
   line-height: 1.55;
 }
 
+/* Stationary Section Cards (Zero Popup Hover) */
 .dev-card {
   background: #ffffff;
   border: 1px solid #e4e4e7;
@@ -103,6 +107,7 @@
   margin: 0;
 }
 
+/* About Section */
 .dev-about-content {
   margin-bottom: 24px;
 }
@@ -324,6 +329,7 @@
   line-height: 1.45;
 }
 
+/* GitHub Repo Link Banner (Zero Popup Hover) */
 .dev-repo-banner {
   background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
   border: 1.5px solid #fde68a;
