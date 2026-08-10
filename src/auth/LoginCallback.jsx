@@ -96,6 +96,7 @@ function LoginCallback() {
         gap: '20px',
         boxSizing: 'border-box'
       }}>
+        {/* Repart Brand Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <img 
             src="/assets/logo.png" 

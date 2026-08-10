@@ -20,6 +20,7 @@ export default function DevelopersPage() {
       <Navbar />
 
       <main className="dev-main">
+        {/* HERO BANNER */}
         <section className="dev-hero">
           <h1 className="dev-hero-title">
             Engineered by Developers, <br /> Free & Open Source for Everyone
@@ -29,6 +30,7 @@ export default function DevelopersPage() {
           </p>
         </section>
 
+        {/* 1. ABOUT WEBSITE (REPART PLATFORM) */}
         <section className="dev-card">
           <div className="dev-card-head">
             <div className="dev-head-icon"><Layers size={20} /></div>
@@ -82,6 +84,7 @@ export default function DevelopersPage() {
           </div>
         </section>
 
+        {/* 2. CREATOR PROFILE (WHO MADE IT) */}
         <section className="dev-card">
           <div className="dev-card-head">
             <div className="dev-head-icon"><User size={20} /></div>
@@ -109,6 +112,7 @@ export default function DevelopersPage() {
                 Full-stack developer and system designer passionate about creating fast, secure web applications, developer tools, and interactive system visualizers.
               </p>
 
+              {/* CLEAN NO-HOVER LINKS GRID */}
               <div className="dev-links-grid">
                 <a
                   href="https://github.com/sanketpadhyal"
@@ -136,6 +140,7 @@ export default function DevelopersPage() {
           </div>
         </section>
 
+        {/* 3. REPART TECH STACK */}
         <section className="dev-card">
           <div className="dev-card-head">
             <div className="dev-head-icon"><Cpu size={20} /></div>
@@ -172,6 +177,7 @@ export default function DevelopersPage() {
           </div>
         </section>
 
+        {/* 4. REPART GITHUB REPOSITORY LINK */}
         <section className="dev-card dev-repo-banner">
           <div className="dev-repo-content">
             <GithubIcon size={32} className="dev-repo-icon" />
