@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import {
   Trophy, Swords, Star, GitFork, Users, Code, Award, Sparkles,
-  ExternalLink, RefreshCw, ShieldAlert, ShieldCheck, Zap, Wrench } from
-'lucide-react';
+  ExternalLink, RefreshCw, ShieldAlert, ShieldCheck, Zap, Wrench
+} from 'lucide-react';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from
-'recharts';
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend
+} from 'recharts';
 import './comparison.css';
 
 import { apiFetch } from '../../api/api.tsx';
 
 const PRESET_USERS = [
-{ username: 'torvalds', label: 'Linus Torvalds' },
-{ username: 'gaearon', label: 'Dan Abramov' },
-{ username: 'yyx99', label: 'Evan You' },
-{ username: 'sindresorhus', label: 'Sindre Sorhus' },
-{ username: 'tj', label: 'TJ Holowaychuk' }];
-
+  { username: 'torvalds', label: 'Linus Torvalds' },
+  { username: 'gaearon', label: 'Dan Abramov' },
+  { username: 'yyx99', label: 'Evan You' },
+  { username: 'sindresorhus', label: 'Sindre Sorhus' },
+  { username: 'tj', label: 'TJ Holowaychuk' }
+];
 
 function formatLocDiff(bigger: number, smaller: number): string {
   const diff = bigger - smaller;
@@ -25,7 +25,7 @@ function formatLocDiff(bigger: number, smaller: number): string {
   return `${diff}`;
 }
 
-export default function AccountComparison({ currentUsername }: {currentUsername: string;}) {
+export default function AccountComparison({ currentUsername }: { currentUsername: string }) {
   const [user1, setUser1] = useState(currentUsername || 'sanketpadhyal');
   const [user2, setUser2] = useState('gaearon');
   const [isLoading, setIsLoading] = useState(false);
@@ -73,19 +73,19 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
     fetchComparison(user1, user2);
   };
 
-
+  // 6 Multidimensional Metrics for BarChart Comparison
   const dimensionChartData = comparison ? [
-  { metric: 'Work Quality', [comparison.user1.login]: comparison.user1.engineering_score, [comparison.user2.login]: comparison.user2.engineering_score },
-  { metric: 'Code Quality', [comparison.user1.login]: comparison.user1.code_quality_score, [comparison.user2.login]: comparison.user2.code_quality_score },
-  { metric: 'Architecture', [comparison.user1.login]: comparison.user1.architecture_score, [comparison.user2.login]: comparison.user2.architecture_score },
-  { metric: 'Security Hygiene', [comparison.user1.login]: comparison.user1.security_score, [comparison.user2.login]: comparison.user2.security_score },
-  { metric: 'OS Velocity', [comparison.user1.login]: comparison.user1.velocity_score, [comparison.user2.login]: comparison.user2.velocity_score },
-  { metric: 'Power Rating', [comparison.user1.login]: comparison.user1.power_score, [comparison.user2.login]: comparison.user2.power_score }] :
-  [];
+    { metric: 'Work Quality', [comparison.user1.login]: comparison.user1.engineering_score, [comparison.user2.login]: comparison.user2.engineering_score },
+    { metric: 'Code Quality', [comparison.user1.login]: comparison.user1.code_quality_score, [comparison.user2.login]: comparison.user2.code_quality_score },
+    { metric: 'Architecture', [comparison.user1.login]: comparison.user1.architecture_score, [comparison.user2.login]: comparison.user2.architecture_score },
+    { metric: 'Security Hygiene', [comparison.user1.login]: comparison.user1.security_score, [comparison.user2.login]: comparison.user2.security_score },
+    { metric: 'OS Velocity', [comparison.user1.login]: comparison.user1.velocity_score, [comparison.user2.login]: comparison.user2.velocity_score },
+    { metric: 'Power Rating', [comparison.user1.login]: comparison.user1.power_score, [comparison.user2.login]: comparison.user2.power_score }
+  ] : [];
 
   return (
     <div className="cmp-page fade-in">
-      {}
+      {/* Header Title */}
       <div className="cmp-header">
         <div className="cmp-title-wrap">
           <div className="cmp-icon-badge">
@@ -98,26 +98,26 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
         </div>
       </div>
 
-      {}
-      {isLoading &&
-      <div className="cmp-skeleton-wrap">
-          {}
+      {/* Skeleton loader for comparison results */}
+      {isLoading && (
+        <div className="cmp-skeleton-wrap">
+          {/* Summary banner skeleton */}
           <div className="cmp-skeleton-card cmp-skeleton-summary">
             <div className="cmp-skeleton-line cmp-skel-title"></div>
             <div className="cmp-skeleton-line cmp-skel-text"></div>
             <div className="cmp-skeleton-line cmp-skel-text-2"></div>
           </div>
 
-          {}
+          {/* Winners banner skeletons */}
           <div className="cmp-skeleton-winners">
             <div className="cmp-skeleton-card cmp-skel-winner"></div>
             <div className="cmp-skeleton-card cmp-skel-winner"></div>
           </div>
 
-          {}
+          {/* Player cards skeletons */}
           <div className="cmp-skeleton-duel-grid">
-            {[0, 1].map((idx) =>
-          <div key={idx} className="cmp-skeleton-card cmp-skel-player">
+            {[0, 1].map((idx) => (
+              <div key={idx} className="cmp-skeleton-card cmp-skel-player">
                 <div className="cmp-skel-player-top">
                   <div className="cmp-skel-avatar"></div>
                   <div className="cmp-skel-player-info">
@@ -126,9 +126,9 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                   </div>
                 </div>
                 <div className="cmp-skel-scores-grid">
-                  {[0, 1, 2, 3].map((s) =>
-              <div key={s} className="cmp-skel-score-box"></div>
-              )}
+                  {[0, 1, 2, 3].map((s) => (
+                    <div key={s} className="cmp-skel-score-box"></div>
+                  ))}
                 </div>
                 <div className="cmp-skel-chips-row">
                   <div className="cmp-skel-chip"></div>
@@ -136,43 +136,43 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                   <div className="cmp-skel-chip"></div>
                 </div>
                 <div className="cmp-skel-stats-grid">
-                  {[0, 1, 2, 3].map((s) =>
-              <div key={s} className="cmp-skel-stat-item"></div>
-              )}
+                  {[0, 1, 2, 3].map((s) => (
+                    <div key={s} className="cmp-skel-stat-item"></div>
+                  ))}
                 </div>
               </div>
-          )}
+            ))}
           </div>
 
-          {}
+          {/* Chart skeleton */}
           <div className="cmp-skeleton-card cmp-skel-chart">
             <div className="cmp-skeleton-line cmp-skel-chart-title"></div>
             <div className="cmp-skel-chart-bars">
-              {[0, 1, 2, 3, 4, 5].map((b) =>
-            <div key={b} className="cmp-skel-bar-col">
-                  <div className="cmp-skel-bar" style={{ height: `${30 + b * 13 % 60}%` }}></div>
+              {[0, 1, 2, 3, 4, 5].map((b) => (
+                <div key={b} className="cmp-skel-bar-col">
+                  <div className="cmp-skel-bar" style={{ height: `${30 + ((b * 13) % 60)}%` }}></div>
                   <div className="cmp-skel-bar-label"></div>
                 </div>
-            )}
+              ))}
             </div>
           </div>
 
-          {}
+          {/* Table skeleton */}
           <div className="cmp-skeleton-card cmp-skel-table">
             <div className="cmp-skeleton-line cmp-skel-chart-title"></div>
-            {[0, 1, 2, 3, 4, 5, 6].map((r) =>
-          <div key={r} className="cmp-skel-table-row">
+            {[0, 1, 2, 3, 4, 5, 6].map((r) => (
+              <div key={r} className="cmp-skel-table-row">
                 <div className="cmp-skeleton-line cmp-skel-row-cell-1"></div>
                 <div className="cmp-skeleton-line cmp-skel-row-cell"></div>
                 <div className="cmp-skeleton-line cmp-skel-row-cell"></div>
                 <div className="cmp-skeleton-line cmp-skel-row-cell-adv"></div>
               </div>
-          )}
+            ))}
           </div>
         </div>
-      }
+      )}
 
-      {}
+      {/* Duel Setup Arena Card */}
       <div className="cmp-arena-card">
         <form onSubmit={handleStartDuel} className="cmp-arena-form">
           <div className="cmp-player-box left">
@@ -180,15 +180,15 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
               <span className="cmp-player-tag">Player 1 (You)</span>
             </div>
             <div className="cmp-player-row">
-              {user1 &&
-              <img
-                src={`https://github.com/${user1.trim()}.png`}
-                alt={user1}
-                className="cmp-arena-avatar"
-                onError={(e) => e.currentTarget.style.opacity = '0'}
-                onLoad={(e) => e.currentTarget.style.opacity = '1'} />
-
-              }
+              {user1 && (
+                <img
+                  src={`https://github.com/${user1.trim()}.png`}
+                  alt={user1}
+                  className="cmp-arena-avatar"
+                  onError={(e) => (e.currentTarget.style.opacity = '0')}
+                  onLoad={(e) => (e.currentTarget.style.opacity = '1')}
+                />
+              )}
               <div className="cmp-input-wrap">
                 <span className="cmp-at">@</span>
                 <input
@@ -197,13 +197,13 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                   placeholder="username1"
                   value={user1}
                   onChange={(e) => setUser1(e.target.value)}
-                  required />
-                
+                  required
+                />
               </div>
             </div>
           </div>
 
-          {}
+          {/* VS Center Badge */}
           <div className="cmp-vs-badge">
             <span>VS</span>
           </div>
@@ -213,15 +213,15 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
               <span className="cmp-player-tag">Player 2 (Opponent)</span>
             </div>
             <div className="cmp-player-row">
-              {user2 &&
-              <img
-                src={`https://github.com/${user2.trim()}.png`}
-                alt={user2}
-                className="cmp-arena-avatar"
-                onError={(e) => e.currentTarget.style.opacity = '0'}
-                onLoad={(e) => e.currentTarget.style.opacity = '1'} />
-
-              }
+              {user2 && (
+                <img
+                  src={`https://github.com/${user2.trim()}.png`}
+                  alt={user2}
+                  className="cmp-arena-avatar"
+                  onError={(e) => (e.currentTarget.style.opacity = '0')}
+                  onLoad={(e) => (e.currentTarget.style.opacity = '1')}
+                />
+              )}
               <div className="cmp-input-wrap">
                 <span className="cmp-at">@</span>
                 <input
@@ -230,58 +230,58 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                   placeholder="username2"
                   value={user2}
                   onChange={(e) => setUser2(e.target.value)}
-                  required />
-                
+                  required
+                />
               </div>
             </div>
-            {}
+            {/* Quick Opponent Suggestion Chips */}
             <div className="cmp-presets-row">
               <small>Presets:</small>
-              {PRESET_USERS.map((p) =>
-              <button
-                key={p.username}
-                type="button"
-                className={`cmp-preset-chip ${user2 === p.username ? 'active' : ''}`}
-                onClick={() => {
-                  setUser2(p.username);
-                  fetchComparison(user1, p.username);
-                }}>
-                
+              {PRESET_USERS.map((p) => (
+                <button
+                  key={p.username}
+                  type="button"
+                  className={`cmp-preset-chip ${user2 === p.username ? 'active' : ''}`}
+                  onClick={() => {
+                    setUser2(p.username);
+                    fetchComparison(user1, p.username);
+                  }}
+                >
                   {p.username}
                 </button>
-              )}
+              ))}
             </div>
           </div>
 
           <div className="cmp-btn-row">
             <button type="submit" className="cmp-launch-btn" disabled={isLoading}>
-              {isLoading ?
-              <>
+              {isLoading ? (
+                <>
                   <RefreshCw size={16} className="cmp-spin" /> Deep Structural Audit in Progress...
-                </> :
-
-              <>
+                </>
+              ) : (
+                <>
                   <Swords size={18} /> Launch Developer Duel
                 </>
-              }
+              )}
             </button>
           </div>
         </form>
       </div>
 
-      {}
-      {error &&
-      <div className="cmp-error-card">
+      {/* Error Card */}
+      {error && (
+        <div className="cmp-error-card">
           <ShieldAlert size={20} />
           <span>{error}</span>
         </div>
-      }
+      )}
 
-      {}
-      {comparison &&
-      <div className="cmp-results-document">
+      {/* Comparison Results */}
+      {comparison && (
+        <div className="cmp-results-document">
 
-          {}
+          {/* 30-Second Executive Matchup Brief Banner */}
           <div className="cmp-summary-card">
             <div className="cmp-summary-head">
               <Sparkles size={18} className="cmp-gold-sparkle" />
@@ -297,7 +297,7 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
             </div>
           </div>
 
-          {}
+          {/* Dual Winners Banner (Overall Reach vs Pure Work Quality) */}
           <div className="cmp-dual-winners-grid">
             <div className="cmp-winner-banner work-winner">
               <div className="cmp-winner-badge">
@@ -307,9 +307,9 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                     {comparison.work_winner === 'Tie' ? 'Work Quality: Draw' : `Work Quality Winner: @${comparison.work_winner}`}
                   </h2>
                   <p>
-                    {comparison.work_winner === 'Tie' ?
-                  'Both developers produce equal pure engineering work quality & type safety.' :
-                  `@${comparison.work_winner} leads in pure codebase quality, stack sophistication, and type safety regardless of follower count.`}
+                    {comparison.work_winner === 'Tie'
+                      ? 'Both developers produce equal pure engineering work quality & type safety.'
+                      : `@${comparison.work_winner} leads in pure codebase quality, stack sophistication, and type safety regardless of follower count.`}
                   </p>
                 </div>
               </div>
@@ -323,22 +323,22 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                     {comparison.winner === 'Tie' ? 'Reach: Draw' : `Overall Reach Winner: @${comparison.winner}`}
                   </h2>
                   <p>
-                    {comparison.winner === 'Tie' ?
-                  'Both developers demonstrate equal community reach and star impact.' :
-                  `@${comparison.winner} leads in overall community reach, open-source stars, and developer power rating.`}
+                    {comparison.winner === 'Tie'
+                      ? 'Both developers demonstrate equal community reach and star impact.'
+                      : `@${comparison.winner} leads in overall community reach, open-source stars, and developer power rating.`}
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {}
+          {/* Player Cards Comparison Row */}
           <div className="cmp-hero-duel-grid">
-            {}
+            {/* User 1 Card */}
             <div className={`cmp-hero-card ${comparison.work_winner === comparison.user1.login ? 'winner-card' : ''}`}>
-              {comparison.work_winner === comparison.user1.login &&
-            <div className="cmp-crown-badge work-crown"><Wrench size={12} /> WORK MVP</div>
-            }
+              {comparison.work_winner === comparison.user1.login && (
+                <div className="cmp-crown-badge work-crown"><Wrench size={12} /> WORK MVP</div>
+              )}
               <div className="cmp-card-top">
                 <img src={comparison.user1.avatar_url} alt={comparison.user1.login} className="cmp-avatar" />
                 <div>
@@ -350,7 +350,7 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
               </div>
               <p className="cmp-bio">{comparison.user1.bio}</p>
 
-              {}
+              {/* 4 Score Badges Grid */}
               <div className="cmp-scores-quad">
                 <div className="cmp-power-box work">
                   <span className="cmp-power-lbl">WORK QUALITY</span>
@@ -396,11 +396,11 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
               </div>
             </div>
 
-            {}
+            {/* User 2 Card */}
             <div className={`cmp-hero-card ${comparison.work_winner === comparison.user2.login ? 'winner-card' : ''}`}>
-              {comparison.work_winner === comparison.user2.login &&
-            <div className="cmp-crown-badge work-crown"><Wrench size={12} /> WORK MVP</div>
-            }
+              {comparison.work_winner === comparison.user2.login && (
+                <div className="cmp-crown-badge work-crown"><Wrench size={12} /> WORK MVP</div>
+              )}
               <div className="cmp-card-top">
                 <img src={comparison.user2.avatar_url} alt={comparison.user2.login} className="cmp-avatar" />
                 <div>
@@ -412,7 +412,7 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
               </div>
               <p className="cmp-bio">{comparison.user2.bio}</p>
 
-              {}
+              {/* 4 Score Badges Grid */}
               <div className="cmp-scores-quad">
                 <div className="cmp-power-box work">
                   <span className="cmp-power-lbl">WORK QUALITY</span>
@@ -459,7 +459,7 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
             </div>
           </div>
 
-          {}
+          {/* 6-Dimension Comparative Bar Chart */}
           <div className="cmp-chart-card">
             <h3><Sparkles size={16} /> 6-Dimensional Architectural Comparison</h3>
             <div style={{ width: '100%', height: 280 }}>
@@ -476,7 +476,7 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
             </div>
           </div>
 
-          {}
+          {/* Category-by-Category Breakdown Table */}
           <div className="cmp-table-card">
             <h3><Award size={16} /> 10-Point Matchup Matrix</h3>
             <div className="cmp-table">
@@ -595,7 +595,7 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
             </div>
           </div>
 
-          {}
+          {/* LOC Comparison Card */}
           <div className="cmp-table-card">
             <h3><Code size={16} /> Lines of Code Across Repositories</h3>
             <p style={{ fontSize: '12px', color: '#71717a', margin: '0 0 20px 0' }}>
@@ -603,7 +603,7 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
             </p>
 
             <div className="cmp-loc-compare-grid">
-              {}
+              {/* User 1 LOC */}
               <div className="cmp-loc-user-block">
                 <div className="cmp-loc-user-header">
                   <img src={comparison.user1.avatar_url} alt={comparison.user1.login} className="cmp-loc-avatar" />
@@ -615,20 +615,20 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                 </div>
                 <div className="cmp-loc-bar-wrap">
                   <div
-                  className="cmp-loc-bar u1"
-                  style={{
-                    width: comparison.user1.total_loc > 0 || comparison.user2.total_loc > 0 ?
-                    `${Math.round(comparison.user1.total_loc / Math.max(comparison.user1.total_loc, comparison.user2.total_loc, 1) * 100)}%` :
-                    '0%'
-                  }} />
-                
+                    className="cmp-loc-bar u1"
+                    style={{
+                      width: comparison.user1.total_loc > 0 || comparison.user2.total_loc > 0
+                        ? `${Math.round((comparison.user1.total_loc / Math.max(comparison.user1.total_loc, comparison.user2.total_loc, 1)) * 100)}%`
+                        : '0%'
+                    }}
+                  />
                 </div>
               </div>
 
-              {}
+              {/* VS divider */}
               <div className="cmp-loc-vs">VS</div>
 
-              {}
+              {/* User 2 LOC */}
               <div className="cmp-loc-user-block">
                 <div className="cmp-loc-user-header">
                   <img src={comparison.user2.avatar_url} alt={comparison.user2.login} className="cmp-loc-avatar" />
@@ -640,42 +640,42 @@ export default function AccountComparison({ currentUsername }: {currentUsername:
                 </div>
                 <div className="cmp-loc-bar-wrap">
                   <div
-                  className="cmp-loc-bar u2"
-                  style={{
-                    width: comparison.user1.total_loc > 0 || comparison.user2.total_loc > 0 ?
-                    `${Math.round(comparison.user2.total_loc / Math.max(comparison.user1.total_loc, comparison.user2.total_loc, 1) * 100)}%` :
-                    '0%'
-                  }} />
-                
+                    className="cmp-loc-bar u2"
+                    style={{
+                      width: comparison.user1.total_loc > 0 || comparison.user2.total_loc > 0
+                        ? `${Math.round((comparison.user2.total_loc / Math.max(comparison.user1.total_loc, comparison.user2.total_loc, 1)) * 100)}%`
+                        : '0%'
+                    }}
+                  />
                 </div>
               </div>
             </div>
 
-            {}
-            {(comparison.user1.total_loc > 0 || comparison.user2.total_loc > 0) &&
-          <div className="cmp-loc-winner-row">
-                {comparison.user1.total_loc === comparison.user2.total_loc ?
-            <span className="cmp-loc-winner-chip tie">⚖️ Equal Codebase Size</span> :
-            comparison.user1.total_loc > comparison.user2.total_loc ?
-            <span className="cmp-loc-winner-chip u1">
+            {/* Winner callout */}
+            {(comparison.user1.total_loc > 0 || comparison.user2.total_loc > 0) && (
+              <div className="cmp-loc-winner-row">
+                {comparison.user1.total_loc === comparison.user2.total_loc ? (
+                  <span className="cmp-loc-winner-chip tie">⚖️ Equal Codebase Size</span>
+                ) : comparison.user1.total_loc > comparison.user2.total_loc ? (
+                  <span className="cmp-loc-winner-chip u1">
                     @{comparison.user1.login} has {formatLocDiff(comparison.user1.total_loc, comparison.user2.total_loc)} more code
-                  </span> :
-
-            <span className="cmp-loc-winner-chip u2">
+                  </span>
+                ) : (
+                  <span className="cmp-loc-winner-chip u2">
                     @{comparison.user2.login} has {formatLocDiff(comparison.user2.total_loc, comparison.user1.total_loc)} more code
                   </span>
-            }
+                )}
               </div>
-          }
+            )}
           </div>
 
-          {}
+          {/* Repart Watermark Footer */}
 
           <div className="cmp-watermark-row">
             <span>⚡ Repart Hyper-Level Engineering Audit Engine v3.0</span>
           </div>
         </div>
-      }
-    </div>);
-
+      )}
+    </div>
+  );
 }

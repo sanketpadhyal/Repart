@@ -3,10 +3,10 @@ import { Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SectionHeader from '../shared/SectionHeader.tsx';
 
-export default function Timeline({ report }: {report: any;}) {
+export default function Timeline({ report }: { report: any }) {
   const meta = report?.meta || {};
   const contributors = report?.contributors || [];
-
+  
   const events = [];
 
   if (meta.created_at) {
@@ -23,7 +23,7 @@ export default function Timeline({ report }: {report: any;}) {
     const names = contributors.slice(0, 3).map((c: any) => c.login).join(', ');
     const more = contributors.length > 3 ? ' and more' : '';
     events.push({
-      date: meta.created_at,
+      date: meta.created_at, 
       title: `${contributors.length} Contributors`,
       description: `${names}${more}`,
       type: 'contributors',
@@ -61,10 +61,10 @@ export default function Timeline({ report }: {report: any;}) {
     });
   }
 
-
+  // Sort by date descending
   events.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-
+  // Deduplicate dates if needed, or just show them nicely formatted
   const formatDate = (dateString: string) => {
     try {
       return new Date(dateString).toLocaleDateString('en-US', {
@@ -79,38 +79,38 @@ export default function Timeline({ report }: {report: any;}) {
 
   return (
     <div>
-      <SectionHeader
-        icon={Clock}
-        title="Timeline"
-        description="Repository history and milestones" />
-      
+      <SectionHeader 
+        icon={Clock} 
+        title="Timeline" 
+        description="Repository history and milestones" 
+      />
 
       <div className="rp-card">
         <div className="rp-timeline">
-          {events.map((event, i) =>
-          <motion.div
-            key={i}
-            className="rp-timeline-item"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.2 }}>
-            
-              <div
-              className="rp-timeline-dot"
-              style={{ backgroundColor: event.color }} />
-            
+          {events.map((event, i) => (
+            <motion.div
+              key={i}
+              className="rp-timeline-item"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.2 }}
+            >
+              <div 
+                className="rp-timeline-dot" 
+                style={{ backgroundColor: event.color }}
+              />
               <div>
                 <div className="rp-timeline-date">{formatDate(event.date)}</div>
                 <div className="rp-timeline-title">{event.title}</div>
                 <div className="rp-timeline-desc">{event.description}</div>
               </div>
             </motion.div>
+          ))}
+          {events.length === 0 && (
+            <div style={{ color: '#6b7280', fontSize: 13 }}>No timeline events found.</div>
           )}
-          {events.length === 0 &&
-          <div style={{ color: '#6b7280', fontSize: 13 }}>No timeline events found.</div>
-          }
         </div>
       </div>
-    </div>);
-
+    </div>
+  );
 }

@@ -1,3 +1,5 @@
+/* ─── Analyze Repo Page ───────────────────────────────────── */
+
 .analyze-page {
   max-width: 760px;
   margin: 0 auto;
@@ -8,6 +10,8 @@
   gap: 36px;
   min-height: 100%;
 }
+
+/* Hero */
 .analyze-hero {
   text-align: center;
   display: flex;
@@ -15,6 +19,7 @@
   align-items: center;
   gap: 16px;
 }
+
 .analyze-badge {
   display: inline-flex;
   align-items: center;
@@ -28,6 +33,7 @@
   border-radius: 100px;
   letter-spacing: 0.02em;
 }
+
 .analyze-title {
   font-size: clamp(28px, 5vw, 42px);
   font-weight: 800;
@@ -36,12 +42,14 @@
   margin: 0;
   letter-spacing: -0.02em;
 }
+
 .analyze-title-gradient {
   background: linear-gradient(135deg, #8c6b22 0%, #b8891f 50%, #d4a832 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
 .analyze-subtitle {
   font-size: 15px;
   color: #71717a;
@@ -49,12 +57,15 @@
   max-width: 520px;
   margin: 0;
 }
+
+/* ─── Search Form ─── */
 .analyze-form {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .analyze-input-wrap {
   display: flex;
   align-items: center;
@@ -66,14 +77,17 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   transition: border-color 0.2s, box-shadow 0.2s;
 }
+
 .analyze-input-wrap.focused {
   border-color: #8c6b22;
   box-shadow: 0 0 0 3px rgba(140, 107, 34, 0.10), 0 4px 24px rgba(0, 0, 0, 0.06);
 }
+
 .analyze-input-wrap.has-error {
   border-color: #ef4444;
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.10);
 }
+
 .analyze-input-icon {
   display: flex;
   align-items: center;
@@ -81,6 +95,7 @@
   flex-shrink: 0;
   margin-right: 12px;
 }
+
 .analyze-input {
   flex: 1;
   border: none;
@@ -91,9 +106,11 @@
   color: #18181b;
   min-width: 0;
 }
+
 .analyze-input::placeholder {
   color: #a1a1aa;
 }
+
 .analyze-paste-btn,
 .analyze-clear-btn {
   display: inline-flex;
@@ -112,10 +129,12 @@
   flex-shrink: 0;
   transition: background 0.15s;
 }
+
 .analyze-paste-btn:hover,
 .analyze-clear-btn:hover {
   background: #e4e4e7;
 }
+
 .analyze-submit-btn {
   display: inline-flex;
   align-items: center;
@@ -133,14 +152,18 @@
   transition: background 0.2s, transform 0.15s;
   white-space: nowrap;
 }
+
 .analyze-submit-btn:hover:not(:disabled) {
   background: #27272a;
   transform: scale(1.02);
 }
+
 .analyze-submit-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
+
+/* Spinner */
 .analyze-spinner {
   width: 14px;
   height: 14px;
@@ -150,9 +173,12 @@
   animation: spin 0.7s linear infinite;
   display: inline-block;
 }
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Error */
 .analyze-error {
   display: flex;
   align-items: center;
@@ -162,6 +188,8 @@
   margin: 0;
   padding: 0 4px;
 }
+
+/* ─── Examples ─── */
 .analyze-examples {
   display: flex;
   align-items: center;
@@ -169,17 +197,20 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .analyze-examples-label {
   font-size: 13px;
   color: #a1a1aa;
   font-weight: 500;
 }
+
 .analyze-example-chips {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
 }
+
 .analyze-example-chip {
   display: inline-flex;
   align-items: center;
@@ -195,11 +226,14 @@
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
+
 .analyze-example-chip:hover {
   border-color: #8c6b22;
   color: #8c6b22;
   background: #fefce8;
 }
+
+/* ─── Feature Tags ─── */
 .analyze-features {
   display: flex;
   gap: 10px;
@@ -207,6 +241,7 @@
   justify-content: center;
   margin-top: 8px;
 }
+
 .analyze-feature-tag {
   display: inline-flex;
   align-items: center;
@@ -218,28 +253,35 @@
   font-weight: 600;
   color: #52525b;
 }
+
+/* ─── Mobile ─── */
 @media (max-width: 768px) {
   .analyze-page {
     padding: 40px 16px 100px;
     gap: 28px;
   }
+
   .analyze-input-wrap {
     padding: 8px 8px 8px 14px;
     border-radius: 14px;
     gap: 6px;
   }
+
   .analyze-input-icon {
     display: none;
   }
+
   .analyze-input {
     font-size: 14px;
   }
+
   .analyze-submit-btn {
     padding: 10px 16px;
     font-size: 13px;
     border-radius: 10px;
     flex-shrink: 0;
   }
+
   .analyze-features {
     gap: 8px;
   }

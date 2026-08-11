@@ -1,6 +1,7 @@
 html {
   scroll-behavior: smooth;
 }
+
 body {
   margin: 0;
   width: 100%;
@@ -12,35 +13,43 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent !important;
 }
+
 *, *::before, *::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
 }
+
 button, a, input, select, textarea, div[role="button"] {
   -webkit-tap-highlight-color: transparent !important;
   outline: none !important;
 }
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 [data-lenis-prevent],
 [data-lenis-prevent] * {
   overscroll-behavior: contain !important;
 }
+
 [data-lenis-prevent]::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 [data-lenis-prevent]::-webkit-scrollbar-track {
   background: #f4f4f5;
   border-radius: 100px;
 }
+
 [data-lenis-prevent]::-webkit-scrollbar-thumb {
   background: #d4d4d8;
   border-radius: 100px;
 }
+
 [data-lenis-prevent]::-webkit-scrollbar-thumb:hover {
   background: #8c6b22;
 }
