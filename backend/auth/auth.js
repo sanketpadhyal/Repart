@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
+
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
@@ -12,6 +13,7 @@ if (!supabaseUrl || !supabaseKey) {
 }
 
 const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseKey || 'placeholder');
+
 
 router.get('/github', async (req, res) => {
   try {
@@ -25,7 +27,7 @@ router.get('/github', async (req, res) => {
       }
     }
     if (!frontendBase) {
-      frontendBase = ''; // Your Frontend Origin Here (e.g., 'https://yourfrontend.com')
+      frontendBase = 'https://repartgit.netlify.app';
     }
 
     if (supabaseUrl && supabaseKey && !supabaseUrl.includes('placeholder')) {
@@ -34,7 +36,7 @@ router.get('/github', async (req, res) => {
         options: {
           redirectTo: `${frontendBase}/login/callback`,
           scopes: 'repo read:user user:email'
-        },
+        }
       });
 
       if (!error && data?.url) {
@@ -44,6 +46,7 @@ router.get('/github', async (req, res) => {
         console.error("Supabase OAuth error:", error);
       }
     }
+
 
     const clientId = process.env.GITHUB_CLIENT_ID;
     if (clientId) {
@@ -58,6 +61,7 @@ router.get('/github', async (req, res) => {
   }
 });
 
+
 router.post('/callback', async (req, res) => {
   const { supabase_access_token, provider_token } = req.body;
 
@@ -66,6 +70,7 @@ router.post('/callback', async (req, res) => {
   }
 
   try {
+
     const { data: { user }, error } = await supabase.auth.getUser(supabase_access_token);
 
     if (error || !user) {
@@ -81,6 +86,7 @@ router.post('/callback', async (req, res) => {
     let publicReposCount = 0;
     let totalPrivateReposCount = 0;
     let bio = '';
+
 
     const reqHeaders = { 'User-Agent': 'Repart-App' };
     if (provider_token) {
@@ -104,6 +110,7 @@ router.post('/callback', async (req, res) => {
       console.warn("Could not fetch live GitHub stats:", ghErr.message);
     }
 
+
     const profileData = {
       id: user.id,
       github_username: githubUsername,
@@ -119,6 +126,7 @@ router.post('/callback', async (req, res) => {
       updated_at: new Date().toISOString()
     };
 
+
     const userSupabase = createClient(
       process.env.SUPABASE_URL || supabaseUrl,
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || supabaseKey,
@@ -131,10 +139,11 @@ router.post('/callback', async (req, res) => {
       }
     );
 
+
     try {
-      const { data: dbData, error: profileError } = await userSupabase
-        .from('profiles')
-        .upsert(profileData, { onConflict: 'id' });
+      const { data: dbData, error: profileError } = await userSupabase.
+      from('profiles').
+      upsert(profileData, { onConflict: 'id' });
 
       if (profileError) {
         console.error("Supabase Profiles Upsert Error:", profileError);
@@ -145,15 +154,16 @@ router.post('/callback', async (req, res) => {
       console.error("Upsert exception:", upsertErr.message);
     }
 
+
     const jwtSecret = process.env.JWT_SECRET || 'fallback_secret_do_not_use_in_prod';
     const token = jwt.sign(
-      { 
-        id: user.id, 
+      {
+        id: user.id,
         email: user.email,
         github_username: profileData.github_username
       },
       jwtSecret,
-      { expiresIn: '30d' }
+      { expiresIn: '15d' }
     );
 
     res.json({ token, user: profileData });

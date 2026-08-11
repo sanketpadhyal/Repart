@@ -1,18 +1,18 @@
 import React from 'react';
 import {
   Code, Layers, ShieldCheck, Cpu, ExternalLink,
-  Activity, Terminal, ArrowRight, User
-} from 'lucide-react';
+  Activity, Terminal, ArrowRight, User } from
+'lucide-react';
 import Navbar from '../components/navbar.jsx';
 import Footer from '../components/Footer.jsx';
 import './DevelopersPage.css';
 
-const GithubIcon = ({ size = 18, className = '' }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+const GithubIcon = ({ size = 18, className = '' }) =>
+<svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
     <path d="M9 18c-4.51 2-5-2-7-2"></path>
-  </svg>
-);
+  </svg>;
+
 
 export default function DevelopersPage() {
   return (
@@ -20,7 +20,7 @@ export default function DevelopersPage() {
       <Navbar />
 
       <main className="dev-main">
-        {/* HERO BANNER */}
+        {}
         <section className="dev-hero">
           <h1 className="dev-hero-title">
             Engineered by Developers, <br /> Free & Open Source for Everyone
@@ -30,7 +30,7 @@ export default function DevelopersPage() {
           </p>
         </section>
 
-        {/* 1. ABOUT WEBSITE (REPART PLATFORM) */}
+        {}
         <section className="dev-card">
           <div className="dev-card-head">
             <div className="dev-head-icon"><Layers size={20} /></div>
@@ -84,7 +84,7 @@ export default function DevelopersPage() {
           </div>
         </section>
 
-        {/* 2. CREATOR PROFILE (WHO MADE IT) */}
+        {}
         <section className="dev-card">
           <div className="dev-card-head">
             <div className="dev-head-icon"><User size={20} /></div>
@@ -101,8 +101,8 @@ export default function DevelopersPage() {
               className="dev-creator-avatar"
               onError={(e) => {
                 e.currentTarget.src = '/assets/logo.png';
-              }}
-            />
+              }} />
+            
             <div className="dev-creator-info">
               <div className="dev-creator-name-row">
                 <h3 className="dev-creator-name">Sanket Padhyal</h3>
@@ -112,14 +112,14 @@ export default function DevelopersPage() {
                 Full-stack developer and system designer passionate about creating fast, secure web applications, developer tools, and interactive system visualizers.
               </p>
 
-              {/* CLEAN NO-HOVER LINKS GRID */}
+              {}
               <div className="dev-links-grid">
                 <a
                   href="https://github.com/sanketpadhyal"
                   target="_blank"
                   rel="noreferrer"
-                  className="dev-link-btn"
-                >
+                  className="dev-link-btn">
+                  
                   <GithubIcon size={16} />
                   <span>GitHub Profile</span>
                   <ExternalLink size={13} className="dev-link-arrow" />
@@ -129,8 +129,8 @@ export default function DevelopersPage() {
                   href="https://github.com/sanketpadhyal/Repart"
                   target="_blank"
                   rel="noreferrer"
-                  className="dev-link-btn primary"
-                >
+                  className="dev-link-btn primary">
+                  
                   <Code size={16} />
                   <span>Repart Repository</span>
                   <ExternalLink size={13} className="dev-link-arrow" />
@@ -140,7 +140,7 @@ export default function DevelopersPage() {
           </div>
         </section>
 
-        {/* 3. REPART TECH STACK */}
+        {}
         <section className="dev-card">
           <div className="dev-card-head">
             <div className="dev-head-icon"><Cpu size={20} /></div>
@@ -177,7 +177,7 @@ export default function DevelopersPage() {
           </div>
         </section>
 
-        {/* 4. REPART GITHUB REPOSITORY LINK */}
+        {}
         <section className="dev-card dev-repo-banner">
           <div className="dev-repo-content">
             <GithubIcon size={32} className="dev-repo-icon" />
@@ -191,14 +191,14 @@ export default function DevelopersPage() {
             href="https://github.com/sanketpadhyal/Repart"
             target="_blank"
             rel="noreferrer"
-            className="dev-repo-btn"
-          >
+            className="dev-repo-btn">
+            
             <span>Explore Repository</span> <ArrowRight size={16} />
           </a>
         </section>
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>);
+
 }

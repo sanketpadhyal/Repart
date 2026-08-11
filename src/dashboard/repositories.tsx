@@ -31,7 +31,7 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
   const [sortBy, setSortBy] = useState<string>('updated');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Focus search input when ⌘K or / key shortcut is pressed
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -47,7 +47,7 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Fetch live repositories (public & private) from backend
+
   useEffect(() => {
     if (!username) {
       setIsLoading(false);
@@ -81,61 +81,61 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
       } catch (e) {}
     }
 
-    apiFetch(`/api/github/user-full/${username}`, { headers: reqHeaders })
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data) {
-          const pinnedList = (data.repos || []).map((r: any) => ({ ...r, is_pinned: true }));
-          const pinnedNames = new Set(pinnedList.map((r: any) => r.name.toLowerCase()));
-          const otherRepos = (data.allRepos || []).filter((r: any) => !pinnedNames.has(r.name.toLowerCase()));
-          const combined = [...pinnedList, ...otherRepos];
+    apiFetch(`/api/github/user-full/${username}`, { headers: reqHeaders }).
+    then((res) => res.ok ? res.json() : null).
+    then((data) => {
+      if (data) {
+        const pinnedList = (data.repos || []).map((r: any) => ({ ...r, is_pinned: true }));
+        const pinnedNames = new Set(pinnedList.map((r: any) => r.name.toLowerCase()));
+        const otherRepos = (data.allRepos || []).filter((r: any) => !pinnedNames.has(r.name.toLowerCase()));
+        const combined = [...pinnedList, ...otherRepos];
 
-          if (combined.length > 0) {
-            setRepositories(combined);
-            sessionStorage.setItem(cacheKey, JSON.stringify({
-              timestamp: Date.now(),
-              repos: combined
-            }));
-          }
+        if (combined.length > 0) {
+          setRepositories(combined);
+          sessionStorage.setItem(cacheKey, JSON.stringify({
+            timestamp: Date.now(),
+            repos: combined
+          }));
         }
-      })
-      .catch(err => {
-        console.warn("Error fetching repositories:", err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      }
+    }).
+    catch((err) => {
+      console.warn("Error fetching repositories:", err);
+    }).
+    finally(() => {
+      setIsLoading(false);
+    });
   }, [username]);
 
   const getLanguageColor = (lang?: string) => {
     switch (lang) {
-      case 'TypeScript': return '#3178c6';
-      case 'JavaScript': return '#f1e05a';
-      case 'Python': return '#3572A5';
-      case 'HTML': return '#e34c26';
-      case 'CSS': return '#563d7c';
-      case 'Java': return '#b07219';
-      case 'Go': return '#00ADD8';
-      case 'Rust': return '#dea584';
-      default: return '#8c6b22';
+      case 'TypeScript':return '#3178c6';
+      case 'JavaScript':return '#f1e05a';
+      case 'Python':return '#3572A5';
+      case 'HTML':return '#e34c26';
+      case 'CSS':return '#563d7c';
+      case 'Java':return '#b07219';
+      case 'Go':return '#00ADD8';
+      case 'Rust':return '#dea584';
+      default:return '#8c6b22';
     }
   };
 
-  // Filter & Sort logic
-  const filteredRepos = repositories.filter(repo => {
-    // Search query filter
+
+  const filteredRepos = repositories.filter((repo) => {
+
     const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (repo.description && repo.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    repo.description && repo.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    // Type filter (All, Public, Private)
+
     const isPrivate = repo.private || repo.visibility === 'private';
-    const matchesType = typeFilter === 'all' || 
-      (typeFilter === 'public' && !isPrivate) ||
-      (typeFilter === 'private' && isPrivate);
+    const matchesType = typeFilter === 'all' ||
+    typeFilter === 'public' && !isPrivate ||
+    typeFilter === 'private' && isPrivate;
 
-    // Language filter
-    const matchesLang = languageFilter === 'all' || 
-      (repo.language && repo.language.toLowerCase() === languageFilter.toLowerCase());
+
+    const matchesLang = languageFilter === 'all' ||
+    repo.language && repo.language.toLowerCase() === languageFilter.toLowerCase();
 
     return matchesSearch && matchesType && matchesLang;
   }).sort((a, b) => {
@@ -152,7 +152,7 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
 
   return (
     <div className="repos-page-container fade-in">
-      {/* Header Row */}
+      {}
       <div className="repos-header-row">
         <div className="repos-title-group">
           <h1>
@@ -164,39 +164,39 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
         </div>
       </div>
 
-      {/* Search & Filter Controls Bar */}
+      {}
       <div className="repos-controls-bar">
         <div className="repos-search-box">
           <svg className="repos-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input 
+          <input
             ref={searchInputRef}
-            type="text" 
+            type="text"
             className="repos-search-input"
             placeholder="Search repositories..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+            onChange={(e) => setSearchQuery(e.target.value)} />
+          
           <kbd className="repos-shortcut-kbd">⌘K</kbd>
         </div>
 
         <div className="repos-filters-group">
-          {/* Type Filter */}
-          <select 
+          {}
+          <select
             className="repos-filter-select"
             value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-          >
+            onChange={(e) => setTypeFilter(e.target.value)}>
+            
             <option value="all">Type: All</option>
             <option value="public">Public</option>
             <option value="private">Private</option>
           </select>
 
-          {/* Language Filter */}
-          <select 
+          {}
+          <select
             className="repos-filter-select"
             value={languageFilter}
-            onChange={(e) => setLanguageFilter(e.target.value)}
-          >
+            onChange={(e) => setLanguageFilter(e.target.value)}>
+            
             <option value="all">Language: All</option>
             <option value="typescript">TypeScript</option>
             <option value="javascript">JavaScript</option>
@@ -205,12 +205,12 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
             <option value="css">CSS</option>
           </select>
 
-          {/* Sort By */}
-          <select 
+          {}
+          <select
             className="repos-filter-select"
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
+            onChange={(e) => setSortBy(e.target.value)}>
+            
             <option value="updated">Sort: Last Updated</option>
             <option value="name">Sort: Name</option>
             <option value="stars">Sort: Stars</option>
@@ -218,12 +218,12 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
         </div>
       </div>
 
-      {/* Repositories Grid / Skeletons / Empty State */}
+      {}
       <div className="repos-grid">
-        {isLoading ? (
-          // Smooth Skeleton Cards
-          Array.from({ length: 6 }).map((_, idx) => (
-            <div key={idx} className="repo-skeleton-card">
+        {isLoading ?
+
+        Array.from({ length: 6 }).map((_, idx) =>
+        <div key={idx} className="repo-skeleton-card">
               <div className="repo-card-top">
                 <div className="skeleton-box skeleton-title"></div>
                 <div className="skeleton-box skeleton-badge"></div>
@@ -232,22 +232,22 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
               <div className="skeleton-box skeleton-text-2"></div>
               <div className="skeleton-box skeleton-footer"></div>
             </div>
-          ))
-        ) : filteredRepos.length > 0 ? (
-          filteredRepos.map(repo => {
-            const isPrivate = repo.private || repo.visibility === 'private';
-            return (
-              <div key={repo.id} className="repo-card">
+        ) :
+        filteredRepos.length > 0 ?
+        filteredRepos.map((repo) => {
+          const isPrivate = repo.private || repo.visibility === 'private';
+          return (
+            <div key={repo.id} className="repo-card">
                 <div>
                   <div className="repo-card-top">
                     <div className="repo-name-group">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                      <a 
-                        href={repo.html_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="repo-card-name"
-                      >
+                      <a
+                      href={repo.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="repo-card-name">
+                      
                         {repo.name}
                       </a>
                     </div>
@@ -263,15 +263,15 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
 
                 <div className="repo-card-footer">
                   <div className="repo-meta-left">
-                    {repo.language && (
-                      <span className="repo-lang">
-                        <span 
-                          className="lang-dot" 
-                          style={{ backgroundColor: getLanguageColor(repo.language) }}
-                        ></span>
+                    {repo.language &&
+                  <span className="repo-lang">
+                        <span
+                      className="lang-dot"
+                      style={{ backgroundColor: getLanguageColor(repo.language) }}>
+                    </span>
                         {repo.language}
                       </span>
-                    )}
+                  }
                     <span className="repo-stat-item">
                       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                       {repo.stargazers_count}
@@ -282,28 +282,28 @@ export const RepositoriesView: React.FC<RepositoriesProps> = ({ username = '', o
                     </span>
                   </div>
 
-                  {onSelectRepo && (
-                    <button 
-                      className="repo-action-btn"
-                      onClick={() => onSelectRepo(repo.html_url)}
-                    >
+                  {onSelectRepo &&
+                <button
+                  className="repo-action-btn"
+                  onClick={() => onSelectRepo(repo.html_url)}>
+                  
                       Analyze
                     </button>
-                  )}
+                }
                 </div>
-              </div>
-            );
-          })
-        ) : (
-          <div className="repos-empty-state">
+              </div>);
+
+        }) :
+
+        <div className="repos-empty-state">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <h3>No repositories found</h3>
             <p>Try adjusting your search query or filter settings.</p>
           </div>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default RepositoriesView;

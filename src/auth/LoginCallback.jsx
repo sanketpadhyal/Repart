@@ -8,7 +8,7 @@ function LoginCallback() {
 
   useEffect(() => {
     const hash = window.location.hash;
-    
+
     if (!hash) {
       setError("No authentication token found in URL");
       return;
@@ -29,13 +29,13 @@ function LoginCallback() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         supabase_access_token: accessToken,
-        provider_token: providerToken 
+        provider_token: providerToken
       })
-    })
-    .then(res => res.json())
-    .then(data => {
+    }).
+    then((res) => res.json()).
+    then((data) => {
       if (data.error) {
         setError(data.error);
       } else if (data.token) {
@@ -56,8 +56,8 @@ function LoginCallback() {
           navigate('/dashboard');
         }
       }
-    })
-    .catch(err => {
+    }).
+    catch((err) => {
       console.error('Error exchanging token:', err);
       setError("Failed to verify authentication with server");
     });
@@ -96,13 +96,13 @@ function LoginCallback() {
         gap: '20px',
         boxSizing: 'border-box'
       }}>
-        {/* Repart Brand Header */}
+        {}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img 
-            src="/assets/logo.png" 
-            alt="Repart" 
-            style={{ width: '36px', height: '36px', objectFit: 'contain' }} 
-          />
+          <img
+            src="/assets/logo.png"
+            alt="Repart"
+            style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
+          
           <span style={{
             fontFamily: "'Times New Roman', Georgia, serif",
             fontSize: '24px',
@@ -112,50 +112,50 @@ function LoginCallback() {
           }}>Repart</span>
         </div>
 
-        {error ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>
+        {error ?
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>
             <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#dc2626', margin: 0 }}>
               Authentication Failed
             </h2>
             <p style={{ fontSize: '13px', color: '#71717a', margin: 0, lineHeight: 1.5 }}>
               {error}
             </p>
-            <button 
-              onClick={() => navigate('/')} 
-              style={{
-                marginTop: '8px',
-                padding: '10px 24px',
-                backgroundColor: '#18181b',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '100px',
-                fontWeight: 700,
-                fontSize: '13.5px',
-                cursor: 'pointer'
-              }}
-            >
+            <button
+            onClick={() => navigate('/')}
+            style={{
+              marginTop: '8px',
+              padding: '10px 24px',
+              backgroundColor: '#18181b',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '100px',
+              fontWeight: 700,
+              fontSize: '13.5px',
+              cursor: 'pointer'
+            }}>
+            
               Return to Home
             </button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', width: '100%' }}>
+          </div> :
+
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', width: '100%' }}>
             <div style={{
-              width: '40px',
-              height: '40px',
-              border: '3.5px solid #fef3c7',
-              borderTopColor: '#8c6b22',
-              borderRadius: '50%',
-              animation: 'cbSpin 0.8s linear infinite'
-            }}></div>
+            width: '40px',
+            height: '40px',
+            border: '3.5px solid #fef3c7',
+            borderTopColor: '#8c6b22',
+            borderRadius: '50%',
+            animation: 'cbSpin 0.8s linear infinite'
+          }}></div>
 
             <div>
               <h2 style={{
-                fontSize: '20px',
-                fontFamily: "'Times New Roman', Georgia, serif",
-                fontWeight: 700,
-                color: '#18181b',
-                margin: '0 0 6px 0'
-              }}>
+              fontSize: '20px',
+              fontFamily: "'Times New Roman', Georgia, serif",
+              fontWeight: 700,
+              color: '#18181b',
+              margin: '0 0 6px 0'
+            }}>
                 Authenticating with GitHub
               </h2>
               <p style={{ fontSize: '13px', color: '#71717a', margin: 0, lineHeight: 1.4 }}>
@@ -163,10 +163,10 @@ function LoginCallback() {
               </p>
             </div>
           </div>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }
 
 export default LoginCallback;

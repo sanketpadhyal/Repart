@@ -10,13 +10,13 @@ interface ExplainCardProps {
   delay?: number;
 }
 
-const ExplainCard: React.FC<ExplainCardProps> = ({ detected, explanation, whyItMatters, recommendation, delay = 0 }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 8 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.2, delay }}
-    className="rp-explain-card"
-  >
+const ExplainCard: React.FC<ExplainCardProps> = ({ detected, explanation, whyItMatters, recommendation, delay = 0 }) =>
+<motion.div
+  initial={{ opacity: 0, y: 8 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.2, delay }}
+  className="rp-explain-card">
+  
     <div className="rp-explain-row">
       <div className="rp-explain-icon" style={{ background: '#eff6ff', color: '#2563eb' }}><Search size={13} /></div>
       <div>
@@ -45,8 +45,8 @@ const ExplainCard: React.FC<ExplainCardProps> = ({ detected, explanation, whyItM
         <p className="rp-explain-text">{recommendation}</p>
       </div>
     </div>
-  </motion.div>
-);
+  </motion.div>;
+
 
 export { ExplainCard };
 export default ExplainCard;

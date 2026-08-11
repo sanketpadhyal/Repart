@@ -15,7 +15,7 @@ function App() {
   const searchParams = new URLSearchParams(location.search);
   const showAuthModal = searchParams.get('login') === 'true' || searchParams.get('signup') === 'true';
 
-  // Auth Redirect Sync
+
   useEffect(() => {
     if (location.hash.includes('access_token=') && location.pathname !== '/login/callback') {
       navigate(`/login/callback${location.hash}`);
@@ -51,8 +51,8 @@ function App() {
         <Route path="/login/callback" element={<LoginCallback />} />
       </Routes>
       {showAuthModal && <AuthPage />}
-    </div>
-  );
+    </div>);
+
 }
 
 export default App;

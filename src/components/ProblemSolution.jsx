@@ -45,8 +45,8 @@ function ProblemSolution() {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
 
 export default ProblemSolution;

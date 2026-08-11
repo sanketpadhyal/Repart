@@ -81,8 +81,8 @@ function BlogPage() {
       </main>
       
       <Footer />
-    </div>
-  );
+    </div>);
+
 }
 
 export default BlogPage;

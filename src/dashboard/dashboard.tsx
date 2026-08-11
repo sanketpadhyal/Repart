@@ -54,7 +54,7 @@ interface PortfolioAnalytics {
   securityScore: number;
   securityGrade: string;
   testCoverageRatio: number;
-  languages: Array<{ name: string; count: number; percent: number; color: string }>;
+  languages: Array<{name: string;count: number;percent: number;color: string;}>;
   archetype: string;
   analyzedReposCount: number;
 }
@@ -78,11 +78,11 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
   const [topRepos, setTopRepos] = useState<GitHubRepo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [repoUrl, setRepoUrl] = useState<string>('');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [showLogoutModal, setShowLogoutModal] = useState<boolean>(false);
 
-  // Sync activeTab with URL pathname so refresh never resets the view
+
   useEffect(() => {
     if (location.pathname === '/dashboard/repositories') {
       setActiveTab('repositories');
@@ -95,7 +95,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
     }
   }, [location.pathname]);
 
-  // Reset scroll position to top on tab or route change
+
   useEffect(() => {
     window.scrollTo(0, 0);
     document.body.scrollTop = 0;
@@ -103,7 +103,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
   }, [activeTab, location.pathname]);
 
   useEffect(() => {
-    // Retrieve stored user details from OAuth login
+
     const storedUserStr = localStorage.getItem('repart_user');
     let username = '';
     let providerToken = '';
@@ -122,14 +122,14 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
       }
     }
 
-    // If no logged in user, redirect to auth login
+
     if (!username) {
       setIsLoading(false);
       navigate('/?login=true');
       return;
     }
 
-    // Check sessionStorage cache for fast instant rendering
+
     const cacheKey = `repart_gh_dash_v6_${username}`;
     const cachedStr = sessionStorage.getItem(cacheKey);
     if (cachedStr) {
@@ -148,68 +148,68 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
       }
     }
 
-    // Fetch 100% LIVE data for the authenticated user from backend API
+
     setIsLoading(true);
     const reqHeaders: Record<string, string> = {};
     if (providerToken) {
       reqHeaders['Authorization'] = `token ${providerToken}`;
     }
 
-    apiFetch(`/api/github/user-full/${username}`, { headers: reqHeaders })
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data) {
-          let statsObj = null;
-          if (data.user) {
-            statsObj = {
-              followers: data.user.followers || 0,
-              following: data.user.following || 0,
-              public_repos: data.user.public_repos || 0,
-              total_repos: data.user.public_repos || 0,
-              bio: data.user.bio || '',
-              location: data.user.location || '',
-              html_url: data.user.html_url || `https://github.com/${username}`
-            };
-            setGithubStats(statsObj);
-          }
-          const repoList = (data.allRepos && data.allRepos.length > 0) ? data.allRepos : (data.repos || []);
-          const mostRecent = [...repoList].sort((a: any, b: any) => {
-            const timeA = new Date(a.updated_at || 0).getTime();
-            const timeB = new Date(b.updated_at || 0).getTime();
-            return timeB - timeA;
-          }).slice(0, 6);
-
-          setTopRepos(mostRecent);
-          if (mostRecent.length > 0) {
-            setRepoUrl(mostRecent[0].html_url);
-          }
-          if (data.activity) {
-            setActivityMetrics({
-              longestStreak: data.activity.longestStreak || 0,
-              currentStreak: data.activity.currentStreak || 0,
-              totalCommits: data.activity.totalCommits || 0
-            });
-          }
-          if (data.portfolioAnalytics) {
-            setPortfolioAnalytics(data.portfolioAnalytics);
-          }
-
-          // Cache in sessionStorage
-          sessionStorage.setItem(cacheKey, JSON.stringify({
-            timestamp: Date.now(),
-            stats: statsObj,
-            repos: data.repos,
-            activity: data.activity,
-            portfolioAnalytics: data.portfolioAnalytics
-          }));
+    apiFetch(`/api/github/user-full/${username}`, { headers: reqHeaders }).
+    then((res) => res.ok ? res.json() : null).
+    then((data) => {
+      if (data) {
+        let statsObj = null;
+        if (data.user) {
+          statsObj = {
+            followers: data.user.followers || 0,
+            following: data.user.following || 0,
+            public_repos: data.user.public_repos || 0,
+            total_repos: data.user.public_repos || 0,
+            bio: data.user.bio || '',
+            location: data.user.location || '',
+            html_url: data.user.html_url || `https://github.com/${username}`
+          };
+          setGithubStats(statsObj);
         }
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error("Error fetching live github data:", err);
-        setIsLoading(false);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        const repoList = data.allRepos && data.allRepos.length > 0 ? data.allRepos : data.repos || [];
+        const mostRecent = [...repoList].sort((a: any, b: any) => {
+          const timeA = new Date(a.updated_at || 0).getTime();
+          const timeB = new Date(b.updated_at || 0).getTime();
+          return timeB - timeA;
+        }).slice(0, 6);
+
+        setTopRepos(mostRecent);
+        if (mostRecent.length > 0) {
+          setRepoUrl(mostRecent[0].html_url);
+        }
+        if (data.activity) {
+          setActivityMetrics({
+            longestStreak: data.activity.longestStreak || 0,
+            currentStreak: data.activity.currentStreak || 0,
+            totalCommits: data.activity.totalCommits || 0
+          });
+        }
+        if (data.portfolioAnalytics) {
+          setPortfolioAnalytics(data.portfolioAnalytics);
+        }
+
+
+        sessionStorage.setItem(cacheKey, JSON.stringify({
+          timestamp: Date.now(),
+          stats: statsObj,
+          repos: data.repos,
+          activity: data.activity,
+          portfolioAnalytics: data.portfolioAnalytics
+        }));
+      }
+      setIsLoading(false);
+    }).
+    catch((err) => {
+      console.error("Error fetching live github data:", err);
+      setIsLoading(false);
+    });
+
   }, []);
 
   const confirmLogout = () => {
@@ -218,7 +218,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
     navigate('/');
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const handleAnalyze = (e: React.FormEvent) => {
     e.preventDefault();
     if (!repoUrl.trim()) return;
@@ -239,7 +239,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Avatar & Username formatting
+
   const avatarUrl = user?.avatar_url || githubStats?.avatar_url || 'https://github.com/github.png';
   const displayName = user?.name || user?.user_name || githubStats?.name || 'Developer';
   const usernameHandle = user?.github_username || user?.user_name || '';
@@ -247,19 +247,19 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
 
   const getLanguageColor = (lang?: string) => {
     switch (lang) {
-      case 'TypeScript': return '#3178c6';
-      case 'JavaScript': return '#f7df1e';
-      case 'Python': return '#3572A5';
-      case 'Go': return '#00ADD8';
-      case 'HTML': return '#e34c26';
-      case 'CSS': return '#563d7c';
-      default: return '#8b5cf6';
+      case 'TypeScript':return '#3178c6';
+      case 'JavaScript':return '#f7df1e';
+      case 'Python':return '#3572A5';
+      case 'Go':return '#00ADD8';
+      case 'HTML':return '#e34c26';
+      case 'CSS':return '#563d7c';
+      default:return '#8b5cf6';
     }
   };
 
   return (
     <div className="dashboard-layout">
-      {/* Desktop Left Sidebar */}
+      {}
       <aside className="dashboard-sidebar">
         <div className="sidebar-top">
           <div className="sidebar-brand" onClick={() => navigate('/')}>
@@ -268,24 +268,24 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
           </div>
 
           <nav className="sidebar-nav">
-            <button 
+            <button
               className={`sidebar-nav-btn ${activeTab === 'overview' ? 'active' : ''}`}
               onClick={() => {
                 setActiveTab('overview');
                 navigate('/dashboard');
-              }}
-            >
+              }}>
+              
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
               <span>Overview</span>
             </button>
 
-            <button 
+            <button
               className={`sidebar-nav-btn ${activeTab === 'repositories' ? 'active' : ''}`}
               onClick={() => {
                 setActiveTab('repositories');
                 navigate('/dashboard/repositories');
-              }}
-            >
+              }}>
+              
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
               <span>Repositories</span>
             </button>
@@ -295,8 +295,8 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               onClick={() => {
                 setActiveTab('analyze');
                 navigate('/dashboard/analyze');
-              }}
-            >
+              }}>
+              
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
               <span>Analyze Repository</span>
             </button>
@@ -306,8 +306,8 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               onClick={() => {
                 setActiveTab('compare');
                 navigate('/dashboard/compare');
-              }}
-            >
+              }}>
+              
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"></polyline><line x1="13" y1="19" x2="19" y2="13"></line><line x1="16" y1="16" x2="20" y2="20"></line><line x1="19" y1="21" x2="21" y2="19"></line><polyline points="14.5 6.5 18 3 21 3 21 6 17.5 9.5"></polyline><line x1="5" y1="14" x2="9" y2="18"></line><line x1="7" y1="17" x2="4" y2="20"></line><line x1="3" y1="19" x2="5" y2="21"></line></svg>
               <span>Compare Accounts</span>
             </button>
@@ -317,8 +317,8 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               onClick={() => {
                 setActiveTab('extensions');
                 navigate('/dashboard/extensions');
-              }}
-            >
+              }}>
+              
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="8" height="8" rx="2"></rect><rect x="14" y="2" width="8" height="8" rx="2"></rect><rect x="2" y="14" width="8" height="8" rx="2"></rect><rect x="14" y="14" width="8" height="8" rx="2"></rect></svg>
               <span>Extensions</span>
             </button>
@@ -339,7 +339,7 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
         </div>
       </aside>
 
-      {/* Mobile Top Header */}
+      {}
       <header className="mobile-header">
         <div className="mobile-header-left" onClick={() => navigate('/')}>
           <img src="/assets/logo.png" alt="Repart" className="mobile-logo" />
@@ -353,19 +353,19 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
         </div>
       </header>
 
-      {/* Main Content Area */}
+      {}
       <main className="dashboard-main">
-        {activeTab === 'extensions' && (
-          <div className="tab-content fade-in">
+        {activeTab === 'extensions' &&
+        <div className="tab-content fade-in">
             <ExtensionsView username={usernameHandle} />
           </div>
-        )}
+        }
 
-        {activeTab === 'overview' && (
-          <div className="tab-content fade-in">
-            {/* GitHub Profile Hero Card */}
-            {isLoading ? (
-              <div className="gh-profile-card skeleton-card">
+        {activeTab === 'overview' &&
+        <div className="tab-content fade-in">
+            {}
+            {isLoading ?
+          <div className="gh-profile-card skeleton-card">
                 <div className="gh-profile-header">
                   <div className="skeleton skeleton-avatar"></div>
                   <div className="gh-profile-details">
@@ -377,19 +377,19 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                   </div>
                 </div>
                 <div className="gh-stats-grid">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="gh-stat-box skeleton-stat">
+                  {[1, 2, 3].map((i) =>
+              <div key={i} className="gh-stat-box skeleton-stat">
                       <div className="skeleton skeleton-stat-icon"></div>
                       <div className="skeleton-stat-text-group">
                         <div className="skeleton skeleton-stat-num"></div>
                         <div className="skeleton skeleton-stat-label"></div>
                       </div>
                     </div>
-                  ))}
+              )}
                 </div>
-              </div>
-            ) : (
-              <div className="gh-profile-card">
+              </div> :
+
+          <div className="gh-profile-card">
                 <div className="gh-profile-header">
                   <img src={avatarUrl} alt={displayName} className="gh-profile-avatar" />
                   <div className="gh-profile-details">
@@ -433,30 +433,30 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                   </div>
                 </div>
               </div>
-            )}
+          }
 
-            {/* HYPER-STRONG PORTFOLIO CODEBASE INTELLIGENCE WIDGET */}
-            {isLoading ? (
-              <div className="portfolio-intelligence-card skeleton-card">
+            {}
+            {isLoading ?
+          <div className="portfolio-intelligence-card skeleton-card">
                 <div className="pi-card-header">
                   <div className="skeleton skeleton-pi-title"></div>
                   <div className="skeleton skeleton-pi-pill"></div>
                 </div>
                 <div className="pi-metrics-grid">
-                  {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="pi-metric-box skeleton-stat" style={{ padding: '16px' }}>
+                  {[1, 2, 3, 4].map((i) =>
+              <div key={i} className="pi-metric-box skeleton-stat" style={{ padding: '16px' }}>
                       <div className="skeleton skeleton-pi-metric-title"></div>
                       <div className="skeleton skeleton-pi-metric-val"></div>
                       <div className="skeleton skeleton-pi-metric-sub"></div>
                     </div>
-                  ))}
+              )}
                 </div>
                 <div className="pi-lang-section">
                   <div className="skeleton skeleton-pi-lang-bar"></div>
                 </div>
-              </div>
-            ) : portfolioAnalytics ? (
-              <div className="portfolio-intelligence-card fade-in">
+              </div> :
+          portfolioAnalytics ?
+          <div className="portfolio-intelligence-card fade-in">
                 <div className="pi-card-header">
                   <div className="pi-header-title-group">
                     <h2 className="pi-title">Codebase Intelligence & <span className="text-green-highlight">Security Hygiene</span></h2>
@@ -515,50 +515,50 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                   </div>
                 </div>
 
-                {/* Language Composition Ratio Bar */}
+                {}
                 <div className="pi-lang-section">
                   <div className="pi-lang-header">
                     <span>Language Composition Ratio</span>
-                    {portfolioAnalytics.languages && portfolioAnalytics.languages.length > 0
-                      ? <small>{portfolioAnalytics.languages.length} Language{portfolioAnalytics.languages.length > 1 ? 's' : ''} Detected</small>
-                      : <small>No language data available</small>
-                    }
+                    {portfolioAnalytics.languages && portfolioAnalytics.languages.length > 0 ?
+                <small>{portfolioAnalytics.languages.length} Language{portfolioAnalytics.languages.length > 1 ? 's' : ''} Detected</small> :
+                <small>No language data available</small>
+                }
                   </div>
-                  {portfolioAnalytics.languages && portfolioAnalytics.languages.length > 0 ? (
-                    <>
+                  {portfolioAnalytics.languages && portfolioAnalytics.languages.length > 0 ?
+              <>
                       <div className="pi-lang-bar-wrap">
-                        {portfolioAnalytics.languages.map((l, i) => (
-                          <div
-                            key={i}
-                            className="pi-lang-seg"
-                            style={{ width: `${l.percent}%`, backgroundColor: l.color }}
-                            title={`${l.name}: ${l.percent}%`}
-                          />
-                        ))}
+                        {portfolioAnalytics.languages.map((l, i) =>
+                  <div
+                    key={i}
+                    className="pi-lang-seg"
+                    style={{ width: `${l.percent}%`, backgroundColor: l.color }}
+                    title={`${l.name}: ${l.percent}%`} />
+
+                  )}
                       </div>
                       <div className="pi-lang-legend">
-                        {portfolioAnalytics.languages.slice(0, 5).map((l, i) => (
-                          <div key={i} className="pi-lang-legend-item">
+                        {portfolioAnalytics.languages.slice(0, 5).map((l, i) =>
+                  <div key={i} className="pi-lang-legend-item">
                             <span className="pi-lang-dot" style={{ backgroundColor: l.color }} />
                             <span className="pi-lang-name">{l.name}</span>
                             <strong className="pi-lang-pct">{l.percent}%</strong>
                           </div>
-                        ))}
+                  )}
                       </div>
-                    </>
-                  ) : (
-                    <div className="pi-lang-empty">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </> :
+
+              <div className="pi-lang-empty">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
                       <span>No language data detected across repositories</span>
                     </div>
-                  )}
+              }
                 </div>
-              </div>
-            ) : null}
+              </div> :
+          null}
 
 
 
-            {/* Top Repositories Section */}
+            {}
             <section className="top-repos-section">
               <div className="section-title-row">
                 <h2>Recent Repositories</h2>
@@ -566,9 +566,9 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               </div>
 
               <div className="top-repos-grid">
-                {isLoading ? (
-                  Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="repo-card skeleton-repo">
+                {isLoading ?
+              Array.from({ length: 6 }).map((_, i) =>
+              <div key={i} className="repo-card skeleton-repo">
                       <div className="repo-card-top">
                         <div className="skeleton skeleton-repo-title"></div>
                         <div className="skeleton skeleton-repo-badge"></div>
@@ -577,9 +577,9 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                       <div className="skeleton skeleton-repo-desc-2"></div>
                       <div className="skeleton skeleton-repo-footer"></div>
                     </div>
-                  ))
-                ) : topRepos.map((repo) => (
-                  <div key={repo.id} className="repo-card">
+              ) :
+              topRepos.map((repo) =>
+              <div key={repo.id} className="repo-card">
                     <div className="repo-card-top">
                       <div className="repo-name-group">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
@@ -596,12 +596,12 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
 
                     <div className="repo-card-footer">
                       <div className="repo-meta-left">
-                        {repo.language && (
-                          <span className="repo-lang">
+                        {repo.language &&
+                    <span className="repo-lang">
                             <span className="lang-dot" style={{ backgroundColor: getLanguageColor(repo.language) }}></span>
                             {repo.language}
                           </span>
-                        )}
+                    }
                         <span className="repo-stat-item">
                           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                           {repo.stargazers_count}
@@ -616,11 +616,11 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                       </button>
                     </div>
                   </div>
-                ))}
+              )}
               </div>
             </section>
 
-            {/* GitHub Contributions Heatmap Section */}
+            {}
             <section className="contributions-section">
               <div className="section-title-row">
                 <h2>{isLoading ? 'Loading activity...' : `${(activityMetrics?.totalCommits || 0).toLocaleString()} contributions in the last year`}</h2>
@@ -631,14 +631,14 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
                 <div className="contributions-layout">
                   <div className="contributions-left">
                     <div className="chart-scroll-wrapper">
-                      <img 
-                        src={`https://ghchart.rshah.org/8c6b22/${usernameHandle}`} 
-                        alt="GitHub Contribution Calendar"
-                        className="contributions-chart-img"
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src = `https://ghchart.rshah.org/${usernameHandle}`;
-                        }}
-                      />
+                      <img
+                      src={`https://ghchart.rshah.org/8c6b22/${usernameHandle}`}
+                      alt="GitHub Contribution Calendar"
+                      className="contributions-chart-img"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = `https://ghchart.rshah.org/${usernameHandle}`;
+                      }} />
+                    
                     </div>
                     <div className="chart-footer">
                       <span className="chart-meta-text">Learn how contributions are counted</span>
@@ -709,34 +709,34 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               </div>
             </section>
           </div>
-        )}
+        }
 
-        {/* TAB: REPOSITORIES */}
-        {activeTab === 'repositories' && (
-          <RepositoriesView 
-            username={usernameHandle} 
-            onSelectRepo={handleSelectRepo} 
-          />
-        )}
+        {}
+        {activeTab === 'repositories' &&
+        <RepositoriesView
+          username={usernameHandle}
+          onSelectRepo={handleSelectRepo} />
 
-        {/* TAB: ANALYZE REPO */}
+        }
+
+        {}
         {activeTab === 'analyze' && (() => {
           const repoParam = new URLSearchParams(location.search).get('repo');
-          return repoParam
-            ? <AnalyzeResult repoUrl={repoParam} />
-            : <div className="tab-content fade-in" style={{ padding: 0 }}><AnalyzeRepo /></div>;
+          return repoParam ?
+          <AnalyzeResult repoUrl={repoParam} /> :
+          <div className="tab-content fade-in" style={{ padding: 0 }}><AnalyzeRepo /></div>;
         })()}
 
-        {/* TAB: COMPARE ACCOUNTS */}
-        {activeTab === 'compare' && (
-          <div className="tab-content fade-in" style={{ padding: 0 }}>
+        {}
+        {activeTab === 'compare' &&
+        <div className="tab-content fade-in" style={{ padding: 0 }}>
             <AccountComparison currentUsername={usernameHandle} />
           </div>
-        )}
+        }
 
-        {/* TAB 2: DIAGRAMS */}
-        {activeTab === 'diagrams' && (
-          <div className="tab-content fade-in">
+        {}
+        {activeTab === 'diagrams' &&
+        <div className="tab-content fade-in">
             <header className="main-header">
               <h1>Architecture Diagrams</h1>
               <p>Interactive tree graph generated via static code analysis.</p>
@@ -770,11 +770,11 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               </div>
             </div>
           </div>
-        )}
+        }
 
-        {/* TAB 3: EXPLORER */}
-        {activeTab === 'explorer' && (
-          <div className="tab-content fade-in">
+        {}
+        {activeTab === 'explorer' &&
+        <div className="tab-content fade-in">
             <header className="main-header">
               <h1>API & Data Model Explorer</h1>
               <p>Automatically mapped endpoints and database entity relations.</p>
@@ -805,15 +805,15 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
               </div>
             </div>
           </div>
-        )}
+        }
       </main>
 
-      {/* Mobile Bottom Bar */}
+      {}
       <BottomBar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Logout Confirmation Modal Overlay */}
-      {showLogoutModal && (
-        <div className="logout-modal-wrapper" onClick={() => setShowLogoutModal(false)}>
+      {}
+      {showLogoutModal &&
+      <div className="logout-modal-wrapper" onClick={() => setShowLogoutModal(false)}>
           <div className="logout-modal-panel" onClick={(e) => e.stopPropagation()}>
             <button className="logout-close-btn" onClick={() => setShowLogoutModal(false)} aria-label="Close">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -838,9 +838,9 @@ const Dashboard: React.FC<DashboardProps> = ({ defaultTab = 'overview' }) => {
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+      }
+    </div>);
+
 };
 
 export default Dashboard;

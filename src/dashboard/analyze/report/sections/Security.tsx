@@ -4,7 +4,7 @@ import { Shield, AlertOctagon, AlertTriangle, Info } from 'lucide-react';
 import SectionHeader from '../shared/SectionHeader.tsx';
 import ExplainCard from '../shared/ExplainCard.tsx';
 
-export default function Security({ report }: { report: any }) {
+export default function Security({ report }: {report: any;}) {
   const security = report?.security || { score: 100, signals: [] };
   const score = security.score ?? 100;
   const signals = security.signals || [];
@@ -23,9 +23,9 @@ export default function Security({ report }: { report: any }) {
 
   const getSeverityIcon = (severity: string) => {
     switch (severity?.toLowerCase()) {
-      case 'critical': return <AlertOctagon className="rp-icon-red" />;
-      case 'warning': return <AlertTriangle className="rp-icon-yellow" />;
-      default: return <Info className="rp-icon-blue" />;
+      case 'critical':return <AlertOctagon className="rp-icon-red" />;
+      case 'warning':return <AlertTriangle className="rp-icon-yellow" />;
+      default:return <Info className="rp-icon-blue" />;
     }
   };
 
@@ -39,11 +39,11 @@ export default function Security({ report }: { report: any }) {
         <p className="rp-text-muted">{getScoreLabel(score)}</p>
       </div>
 
-      {security.criticalLeaks && security.criticalLeaks.length > 0 && (
-        <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+      {security.criticalLeaks && security.criticalLeaks.length > 0 &&
+      <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <h3 style={{ color: '#dc2626', fontSize: '14px', fontWeight: 800, margin: '0 0 4px 0' }}>🚨 CRITICAL FILE LEAKS IDENTIFIED</h3>
-          {security.criticalLeaks.map((leak: any, i: number) => (
-            <div key={i} style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', padding: '14px 18px', borderRadius: '12px' }}>
+          {security.criticalLeaks.map((leak: any, i: number) =>
+        <div key={i} style={{ background: '#fef2f2', border: '1.5px solid #fca5a5', padding: '14px 18px', borderRadius: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                 <AlertOctagon style={{ color: '#dc2626' }} size={18} />
                 <strong style={{ color: '#991b1b', fontSize: '14px' }}>{leak.leakType}</strong>
@@ -56,14 +56,14 @@ export default function Security({ report }: { report: any }) {
                 {leak.recommendation}
               </div>
             </div>
-          ))}
+        )}
         </div>
-      )}
+      }
 
       <div className="rp-signals-list">
-        {signals.length > 0 ? (
-          signals.map((signal: any, i: number) => (
-            <div key={i} className="rp-signal-card">
+        {signals.length > 0 ?
+        signals.map((signal: any, i: number) =>
+        <div key={i} className="rp-signal-card">
               <div className="rp-signal-header">
                 {getSeverityIcon(signal.severity)}
                 <span className={`rp-badge rp-severity-${signal.severity?.toLowerCase()}`}>{signal.severity}</span>
@@ -72,18 +72,18 @@ export default function Security({ report }: { report: any }) {
               <p>{signal.explanation}</p>
               <div className="rp-recommendation-box">{signal.recommendation}</div>
             </div>
-          ))
-        ) : (
-          <div className="rp-card rp-success-card">No security issues detected. The repository follows good security practices.</div>
-        )}
+        ) :
+
+        <div className="rp-card rp-success-card">No security issues detected. The repository follows good security practices.</div>
+        }
       </div>
 
-      <ExplainCard 
+      <ExplainCard
         detected={`Security score: ${score}/100`}
         explanation="This score is calculated by checking for common security signals: exposed .env files, missing security middleware, no rate limiting, CORS configuration, and authentication patterns."
         whyItMatters="Security issues in open repositories can expose credentials, allow unauthorized access, or enable injection attacks."
-        recommendation="Address critical issues first, then warnings. Info items are best practices worth following."
-      />
-    </motion.div>
-  );
+        recommendation="Address critical issues first, then warnings. Info items are best practices worth following." />
+      
+    </motion.div>);
+
 }

@@ -4,7 +4,7 @@ import { Check, Circle } from 'lucide-react';
 
 interface ScanTerminalProps {
   repoUrl: string;
-  steps: Record<number, { status: 'pending' | 'running' | 'done'; label: string }>;
+  steps: Record<number, {status: 'pending' | 'running' | 'done';label: string;}>;
   progress: number;
   repoName: string;
 }
@@ -23,14 +23,14 @@ export default function ScanTerminal({ repoUrl, steps, progress, repoName }: Sca
         
         <div className="rp-scan-steps">
           <AnimatePresence>
-            {Object.entries(steps).map(([idx, step]) => (
-              <motion.div 
-                key={idx}
-                className={`rp-scan-step ${step.status}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}
-              >
+            {Object.entries(steps).map(([idx, step]) =>
+            <motion.div
+              key={idx}
+              className={`rp-scan-step ${step.status}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}>
+              
                 <div className="rp-scan-step-icon">
                   {step.status === 'done' && <Check size={16} color="#15803d" />}
                   {step.status === 'running' && <div className="rp-scan-step-spinner" />}
@@ -41,22 +41,22 @@ export default function ScanTerminal({ repoUrl, steps, progress, repoName }: Sca
                   {step.status === 'done' ? 'Done' : step.status === 'running' ? 'Running' : 'Waiting'}
                 </div>
               </motion.div>
-            ))}
+            )}
           </AnimatePresence>
         </div>
 
         <div>
           <div className="rp-progress-wrap">
-            <div 
-              className="rp-progress-bar" 
-              style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
-            ></div>
+            <div
+              className="rp-progress-bar"
+              style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}>
+            </div>
           </div>
           <div className="rp-progress-label">
             {Math.round(progress)}% Complete
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
