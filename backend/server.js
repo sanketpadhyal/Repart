@@ -9,15 +9,15 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 const defaultOrigins = [
-'http://localhost:3000',
-'https://repartgit.netlify.app',
-'https://repartgit.vercel.app'];
+  'http://localhost:3000',
+  'https://repartgit.netlify.app',
+  'https://repartgit.vercel.app'
+];
 
-
-const envOrigins = (process.env.FRONTEND_URL || '').
-split(',').
-map((o) => o.trim().replace(/\/$/, '')).
-filter(Boolean);
+const envOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((o) => o.trim().replace(/\/$/, ''))
+  .filter(Boolean);
 
 const allowedOrigins = Array.from(new Set([...defaultOrigins, ...envOrigins]));
 
@@ -26,11 +26,11 @@ app.use(cors({
     if (!origin) return callback(null, true);
     const cleanOrigin = origin.replace(/\/$/, '');
     if (
-    allowedOrigins.includes(cleanOrigin) ||
-    cleanOrigin.endsWith('.netlify.app') ||
-    cleanOrigin.endsWith('.vercel.app') ||
-    cleanOrigin.includes('localhost'))
-    {
+      allowedOrigins.includes(cleanOrigin) ||
+      cleanOrigin.endsWith('.netlify.app') ||
+      cleanOrigin.endsWith('.vercel.app') ||
+      cleanOrigin.includes('localhost')
+    ) {
       return callback(null, true);
     }
     return callback(null, true);

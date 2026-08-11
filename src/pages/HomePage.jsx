@@ -15,8 +15,8 @@ function HomePage() {
       <DeveloperDuelFeature />
       <Workflow />
       <Footer />
-    </div>);
-
+    </div>
+  );
 }
 
 export default HomePage;

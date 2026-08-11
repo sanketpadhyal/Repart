@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-
+// Initialize Supabase Client
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
@@ -14,7 +14,7 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseKey || 'placeholder');
 
-
+// Generate OAuth URL and redirect with full repo scopes
 router.get('/github', async (req, res) => {
   try {
     let frontendBase = process.env.FRONTEND_URL;
@@ -36,7 +36,7 @@ router.get('/github', async (req, res) => {
         options: {
           redirectTo: `${frontendBase}/login/callback`,
           scopes: 'repo read:user user:email'
-        }
+        },
       });
 
       if (!error && data?.url) {
@@ -47,7 +47,7 @@ router.get('/github', async (req, res) => {
       }
     }
 
-
+    // Direct GitHub OAuth fallback if Supabase is unconfigured or errored
     const clientId = process.env.GITHUB_CLIENT_ID;
     if (clientId) {
       const redirectUri = encodeURIComponent(`${frontendBase}/login/callback`);
@@ -61,7 +61,7 @@ router.get('/github', async (req, res) => {
   }
 });
 
-
+// For custom 15-day JWT generation using the Supabase access token or user info
 router.post('/callback', async (req, res) => {
   const { supabase_access_token, provider_token } = req.body;
 
@@ -70,7 +70,7 @@ router.post('/callback', async (req, res) => {
   }
 
   try {
-
+    // Verify the user using Supabase
     const { data: { user }, error } = await supabase.auth.getUser(supabase_access_token);
 
     if (error || !user) {
@@ -87,7 +87,7 @@ router.post('/callback', async (req, res) => {
     let totalPrivateReposCount = 0;
     let bio = '';
 
-
+    // Fetch live GitHub stats using provider_token if available
     const reqHeaders = { 'User-Agent': 'Repart-App' };
     if (provider_token) {
       reqHeaders['Authorization'] = `token ${provider_token}`;
@@ -110,7 +110,7 @@ router.post('/callback', async (req, res) => {
       console.warn("Could not fetch live GitHub stats:", ghErr.message);
     }
 
-
+    // Extract user profile metadata
     const profileData = {
       id: user.id,
       github_username: githubUsername,
@@ -126,7 +126,7 @@ router.post('/callback', async (req, res) => {
       updated_at: new Date().toISOString()
     };
 
-
+    // Create a user-scoped Supabase client with the user's Bearer token so RLS policies pass
     const userSupabase = createClient(
       process.env.SUPABASE_URL || supabaseUrl,
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || supabaseKey,
@@ -139,11 +139,11 @@ router.post('/callback', async (req, res) => {
       }
     );
 
-
+    // Upsert profile data into Supabase 'profiles' table
     try {
-      const { data: dbData, error: profileError } = await userSupabase.
-      from('profiles').
-      upsert(profileData, { onConflict: 'id' });
+      const { data: dbData, error: profileError } = await userSupabase
+        .from('profiles')
+        .upsert(profileData, { onConflict: 'id' });
 
       if (profileError) {
         console.error("Supabase Profiles Upsert Error:", profileError);
@@ -154,16 +154,16 @@ router.post('/callback', async (req, res) => {
       console.error("Upsert exception:", upsertErr.message);
     }
 
-
+    // Issue custom 15-day JWT
     const jwtSecret = process.env.JWT_SECRET || 'fallback_secret_do_not_use_in_prod';
     const token = jwt.sign(
-      {
-        id: user.id,
+      { 
+        id: user.id, 
         email: user.email,
         github_username: profileData.github_username
       },
       jwtSecret,
-      { expiresIn: '15d' }
+      { expiresIn: '15d' } // 15 days
     );
 
     res.json({ token, user: profileData });

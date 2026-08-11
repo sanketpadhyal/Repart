@@ -11,13 +11,13 @@ interface StatCardProps {
   delay?: number;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ icon: Icon, title, value, explanation, accent = '#2563eb', delay = 0 }) =>
-<motion.div
-  initial={{ opacity: 0, y: 12 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.2, delay }}
-  className="rp-stat-card">
-  
+const StatCard: React.FC<StatCardProps> = ({ icon: Icon, title, value, explanation, accent = '#2563eb', delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 12 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.2, delay }}
+    className="rp-stat-card"
+  >
     <div className="rp-stat-icon" style={{ background: accent + '14', color: accent }}>
       <Icon size={16} />
     </div>
@@ -26,8 +26,8 @@ const StatCard: React.FC<StatCardProps> = ({ icon: Icon, title, value, explanati
       <p className="rp-stat-value">{value || '—'}</p>
       <p className="rp-stat-explanation">{explanation}</p>
     </div>
-  </motion.div>;
-
+  </motion.div>
+);
 
 export { StatCard };
 export default StatCard;

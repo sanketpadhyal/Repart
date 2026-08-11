@@ -4,7 +4,7 @@ const router = express.Router();
 const comparisonCache = new Map();
 const CACHE_TTL = 30 * 60 * 1000;
 
-
+// Average characters per line per language (used to convert byte counts → LOC)
 const CHARS_PER_LINE = {
   JavaScript: 45, TypeScript: 48, Python: 42, Java: 52, 'C++': 40,
   C: 38, Go: 44, Rust: 46, Ruby: 38, PHP: 50, Swift: 44, Kotlin: 48,
@@ -22,7 +22,7 @@ function formatLOC(n) {
   return `${n}`;
 }
 
-
+// Fetch per-language byte counts for a repo and return estimated LOC
 async function fetchRepoLOC(repoFullName, headers) {
   try {
     const res = await fetch(`https://api.github.com/repos/${repoFullName}/languages`, { headers });
@@ -37,7 +37,7 @@ async function fetchRepoLOC(repoFullName, headers) {
 async function fetchDeepUserData(username, reqHeaderToken) {
   const cacheKey = `user_hyper_${username.toLowerCase()}`;
   const cached = comparisonCache.get(cacheKey);
-  if (cached && Date.now() - cached.ts < CACHE_TTL) {
+  if (cached && (Date.now() - cached.ts < CACHE_TTL)) {
     return cached.data;
   }
 
@@ -75,7 +75,7 @@ async function fetchDeepUserData(username, reqHeaderToken) {
 
   const repoList = Array.isArray(repos) ? repos : [];
 
-  repoList.forEach((r) => {
+  repoList.forEach(r => {
     totalStars += r.stargazers_count || 0;
     totalForks += r.forks_count || 0;
 
@@ -96,21 +96,21 @@ async function fetchDeepUserData(username, reqHeaderToken) {
       hasLicense = true;
     }
 
-    if (r.pushed_at && nowMs - new Date(r.pushed_at).getTime() < ninetyDaysMs) {
+    if (r.pushed_at && (nowMs - new Date(r.pushed_at).getTime() < ninetyDaysMs)) {
       recentPushesCount++;
     }
   });
 
-  const topLanguages = Object.entries(langCounts).
-  sort((a, b) => b[1] - a[1]).
-  slice(0, 5).
-  map(([lang, count]) => ({ lang, count }));
+  const topLanguages = Object.entries(langCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([lang, count]) => ({ lang, count }));
 
   const publicRepos = user.public_repos || 0;
   const followers = user.followers || 0;
   const totalRepos = repoList.length || publicRepos;
 
-
+  // --- If the user has NO repos and NO stars, all code-quality scores are 0 ---
   const hasNoActivity = publicRepos === 0 && totalStars === 0;
 
   let powerScore = 0;
@@ -123,11 +123,11 @@ async function fetchDeepUserData(username, reqHeaderToken) {
   if (!hasNoActivity) {
     const avgStarsPerRepo = (totalStars / Math.max(1, totalRepos)).toFixed(1);
 
-    const rawPower = followers * 0.3 + totalStars * 2.5 + totalForks * 3.5 + publicRepos * 1.2;
+    const rawPower = (followers * 0.3) + (totalStars * 2.5) + (totalForks * 3.5) + (publicRepos * 1.2);
     powerScore = Math.min(99, Math.max(1, Math.round(Math.log10(rawPower + 1) * 22 + (totalStars > 0 ? 10 : 0))));
 
     let qualityPoints = 0;
-    if (totalRepos > 0) qualityPoints += 20;
+    if (totalRepos > 0) qualityPoints += 20; // base for having repos
     if (hasTypeScript) qualityPoints += 20;
     if (topLanguages.length >= 3) qualityPoints += 15;
     if (Number(avgStarsPerRepo) >= 1.0) qualityPoints += 15;
@@ -136,38 +136,38 @@ async function fetchDeepUserData(username, reqHeaderToken) {
     codeQualityScore = Math.min(99, Math.max(1, qualityPoints));
 
     let stackPoints = 0;
-    if (totalRepos > 0) stackPoints += 10;
+    if (totalRepos > 0) stackPoints += 10; // base for having repos
     if (hasTypeScript) stackPoints += 25;
-    if (topLanguages.some((l) => ['TypeScript', 'Go', 'Rust', 'Python'].includes(l.lang))) stackPoints += 20;
+    if (topLanguages.some(l => ['TypeScript', 'Go', 'Rust', 'Python'].includes(l.lang))) stackPoints += 20;
     if (topLanguages.length >= 4) stackPoints += 15;
     if (publicRepos >= 10) stackPoints += 9;
     architectureScore = Math.min(99, Math.max(1, stackPoints));
 
     let securityPoints = 0;
-    if (totalRepos > 0) securityPoints += 20;
+    if (totalRepos > 0) securityPoints += 20; // base for having repos
     if (hasLicense) securityPoints += 20;
     if (hasDocumentation) securityPoints += 15;
     if (hasTypeScript) securityPoints += 14;
     securityScore = Math.min(99, Math.max(1, securityPoints));
 
     let velocityPoints = 0;
-    if (recentPushesCount >= 5) velocityPoints += 35;else
-    if (recentPushesCount >= 1) velocityPoints += 20;
+    if (recentPushesCount >= 5) velocityPoints += 35;
+    else if (recentPushesCount >= 1) velocityPoints += 20;
     if (publicRepos >= 15) velocityPoints += 20;
-    if (user.updated_at && nowMs - new Date(user.updated_at).getTime() < ninetyDaysMs) velocityPoints += 14;
+    if (user.updated_at && (nowMs - new Date(user.updated_at).getTime() < ninetyDaysMs)) velocityPoints += 14;
     velocityScore = Math.min(99, Math.max(velocityPoints > 0 ? 1 : 0, velocityPoints));
 
     engineeringScore = Math.min(99, Math.max(1, Math.round(
-      codeQualityScore * 0.4 + architectureScore * 0.4 + securityScore * 0.2
+      (codeQualityScore * 0.4) + (architectureScore * 0.4) + (securityScore * 0.2)
     )));
   }
 
-
+  // Fetch LOC for top-10 original (non-fork) repos to keep API usage low
   let totalLOC = 0;
   if (!hasNoActivity) {
-    const originalRepos = repoList.filter((r) => !r.fork).slice(0, 10);
+    const originalRepos = repoList.filter(r => !r.fork).slice(0, 10);
     const locResults = await Promise.all(
-      originalRepos.map((r) => fetchRepoLOC(r.full_name, headers))
+      originalRepos.map(r => fetchRepoLOC(r.full_name, headers))
     );
     totalLOC = locResults.reduce((sum, loc) => sum + loc, 0);
   }
@@ -197,11 +197,11 @@ async function fetchDeepUserData(username, reqHeaderToken) {
     total_loc: totalLOC,
     formatted_loc: hasNoActivity ? '0' : formatLOC(totalLOC),
     quality_breakdown: {
-      type_safety: hasNoActivity ? 'No Data' : hasTypeScript ? 'High (TypeScript)' : 'Standard (JavaScript)',
+      type_safety: hasNoActivity ? 'No Data' : (hasTypeScript ? 'High (TypeScript)' : 'Standard (JavaScript)'),
       originality: hasNoActivity ? 'No Repos' : `${originalReposCount}/${totalRepos} Original Repos`,
       avg_stars: hasNoActivity ? 'No Data' : `${(totalStars / Math.max(1, totalRepos)).toFixed(1)} Stars/Repo`,
       tech_diversity: hasNoActivity ? 'No Data' : `${topLanguages.length} Languages`,
-      docs_hygiene: hasNoActivity ? 'No Data' : hasDocumentation ? 'High Quality' : 'Standard',
+      docs_hygiene: hasNoActivity ? 'No Data' : (hasDocumentation ? 'High Quality' : 'Standard'),
       active_velocity: hasNoActivity ? 'No Activity' : `${recentPushesCount} Recent Active Repos`
     }
   };
@@ -222,19 +222,19 @@ router.get('/', async (req, res) => {
     const reqToken = req.headers['authorization'];
 
     const [u1, u2] = await Promise.all([
-    fetchDeepUserData(user1Param, reqToken),
-    fetchDeepUserData(user2Param, reqToken)]
-    );
+      fetchDeepUserData(user1Param, reqToken),
+      fetchDeepUserData(user2Param, reqToken)
+    ]);
 
     let winner = null;
-    if (u1.power_score > u2.power_score) winner = u1.login;else
-    if (u2.power_score > u1.power_score) winner = u2.login;else
-    winner = 'Tie';
+    if (u1.power_score > u2.power_score) winner = u1.login;
+    else if (u2.power_score > u1.power_score) winner = u2.login;
+    else winner = 'Tie';
 
     let workWinner = null;
-    if (u1.engineering_score > u2.engineering_score) workWinner = u1.login;else
-    if (u2.engineering_score > u1.engineering_score) workWinner = u2.login;else
-    workWinner = 'Tie';
+    if (u1.engineering_score > u2.engineering_score) workWinner = u1.login;
+    else if (u2.engineering_score > u1.engineering_score) workWinner = u2.login;
+    else workWinner = 'Tie';
 
     const categoryWinners = {
       power: u1.power_score > u2.power_score ? u1.login : u2.power_score > u1.power_score ? u2.login : 'Tie',

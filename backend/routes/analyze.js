@@ -24,7 +24,7 @@ async function ghFileContent(owner, repo, filePath, token) {
     if (!res.ok) return null;
     const data = await res.json();
     return data.encoding === 'base64' ? Buffer.from(data.content, 'base64').toString('utf-8') : null;
-  } catch {return null;}
+  } catch { return null; }
 }
 
 function sendEvent(res, payload) {
@@ -36,13 +36,13 @@ function sendStep(res, step, label, progress, extra = {}) {
 }
 
 function detectStack(tree) {
-  const paths = tree.map((f) => f.path.toLowerCase());
-  const has = (...names) => names.some((n) => paths.some((p) => p.includes(n)));
+  const paths = tree.map(f => f.path.toLowerCase());
+  const has = (...names) => names.some(n => paths.some(p => p.includes(n)));
   const stack = [];
 
-  if (has('next.config')) stack.push({ name: 'Next.js', icon: '▲', color: '#000000', purpose: 'Full-stack React framework', configFile: 'next.config.js' });else
-  if (has('vite.config')) stack.push({ name: 'Vite', icon: '⚡', color: '#646cff', purpose: 'Build tool and dev server', configFile: 'vite.config.js' });else
-  if (has('react')) stack.push({ name: 'React', icon: '⚛', color: '#61dafb', purpose: 'UI component library', configFile: '' });
+  if (has('next.config')) stack.push({ name: 'Next.js', icon: '▲', color: '#000000', purpose: 'Full-stack React framework', configFile: 'next.config.js' });
+  else if (has('vite.config')) stack.push({ name: 'Vite', icon: '⚡', color: '#646cff', purpose: 'Build tool and dev server', configFile: 'vite.config.js' });
+  else if (has('react')) stack.push({ name: 'React', icon: '⚛', color: '#61dafb', purpose: 'UI component library', configFile: '' });
 
   if (has('tailwind.config')) stack.push({ name: 'Tailwind CSS', icon: '🌊', color: '#06b6d4', purpose: 'Utility-first CSS framework', configFile: 'tailwind.config.js' });
   if (has('tsconfig.json')) stack.push({ name: 'TypeScript', icon: 'TS', color: '#3178c6', purpose: 'Typed superset of JavaScript', configFile: 'tsconfig.json' });
@@ -66,26 +66,26 @@ function detectStack(tree) {
 }
 
 function detectRoutes(tree) {
-  const files = tree.filter((f) => f.type === 'blob');
+  const files = tree.filter(f => f.type === 'blob');
   const routes = [];
 
-  files.filter((f) => f.path.startsWith('app/') && /page\.(tsx|jsx|js)$/.test(f.path)).forEach((f) => {
+  files.filter(f => f.path.startsWith('app/') && /page\.(tsx|jsx|js)$/.test(f.path)).forEach(f => {
     const route = ('/' + f.path.replace(/^app\//, '').replace(/\/page\.(tsx|jsx|js)$/, '').replace(/\[([^\]]+)\]/g, ':$1')).replace(/\/$/, '') || '/';
     routes.push({ path: route, file: f.path, type: 'Next.js App Router', method: 'GET' });
   });
 
-  files.filter((f) => f.path.startsWith('pages/') && !/(^pages\/_app|^pages\/_document)/.test(f.path) && !f.path.includes('api/')).forEach((f) => {
+  files.filter(f => f.path.startsWith('pages/') && !/(^pages\/_app|^pages\/_document)/.test(f.path) && !f.path.includes('api/')).forEach(f => {
     const route = ('/' + f.path.replace(/^pages\//, '').replace(/\.(tsx|jsx|js|ts)$/, '').replace(/\/index$/, '').replace(/\[([^\]]+)\]/g, ':$1')).replace(/\/$/, '') || '/';
     routes.push({ path: route, file: f.path, type: 'Next.js Pages', method: 'GET' });
   });
 
-  files.filter((f) => /\/(pages|app)\/api\//.test(f.path)).forEach((f) => {
+  files.filter(f => /\/(pages|app)\/api\//.test(f.path)).forEach(f => {
     const route = '/api/' + f.path.replace(/^(pages|app)\/api\//, '').replace(/\.(tsx|jsx|js|ts)$/, '').replace(/\[([^\]]+)\]/g, ':$1');
     routes.push({ path: route, file: f.path, type: 'API Route', method: 'ANY' });
   });
 
   if (routes.length === 0) {
-    files.filter((f) => /(\/pages\/|\/routes\/|\/views\/)/.test(f.path) && /\.(tsx|jsx|js|ts)$/.test(f.path)).forEach((f) => {
+    files.filter(f => /(\/pages\/|\/routes\/|\/views\/)/.test(f.path) && /\.(tsx|jsx|js|ts)$/.test(f.path)).forEach(f => {
       const name = f.path.split('/').pop().replace(/\.(tsx|jsx|js|ts)$/, '');
       if (name && !name.startsWith('_') && !name.startsWith('index')) {
         routes.push({ path: '/' + name.toLowerCase(), file: f.path, type: 'Page Component', method: 'GET' });
@@ -109,14 +109,14 @@ function parseDependencies(content, type) {
     return deps;
   }
   if (type === 'requirements.txt') {
-    content.split('\n').filter((l) => l.trim() && !l.startsWith('#')).forEach((l) => {
+    content.split('\n').filter(l => l.trim() && !l.startsWith('#')).forEach(l => {
       const [name, ...rest] = l.split(/[>=<]/);
       deps.prod.push({ name: name.trim(), version: rest.join('') || '*' });
     });
     return deps;
   }
   if (type === 'go.mod') {
-    content.split('\n').filter((l) => l.trim() && !l.startsWith('module') && !l.startsWith('go ') && !l.startsWith('require')).forEach((l) => {
+    content.split('\n').filter(l => l.trim() && !l.startsWith('module') && !l.startsWith('go ') && !l.startsWith('require')).forEach(l => {
       const parts = l.trim().split(/\s+/);
       if (parts.length >= 2) deps.prod.push({ name: parts[0], version: parts[1] });
     });
@@ -124,9 +124,9 @@ function parseDependencies(content, type) {
   }
   if (type === 'pubspec.yaml') {
     let inDeps = false;
-    content.split('\n').forEach((l) => {
-      if (l.startsWith('dependencies:')) {inDeps = true;return;}
-      if (l.startsWith('dev_dependencies:')) {inDeps = false;return;}
+    content.split('\n').forEach(l => {
+      if (l.startsWith('dependencies:')) { inDeps = true; return; }
+      if (l.startsWith('dev_dependencies:')) { inDeps = false; return; }
       if (inDeps && /^\s+\w/.test(l)) {
         const [name, version] = l.trim().split(':');
         deps.prod.push({ name: name.trim(), version: (version || '').trim() || '*' });
@@ -139,7 +139,7 @@ function parseDependencies(content, type) {
 
 function buildDisplayTree(tree) {
   const root = { children: {} };
-  tree.filter((f) => f.type === 'blob' || f.type === 'tree').forEach((f) => {
+  tree.filter(f => f.type === 'blob' || f.type === 'tree').forEach(f => {
     const parts = f.path.split('/');
     let node = root;
     parts.forEach((part, i) => {
@@ -148,16 +148,16 @@ function buildDisplayTree(tree) {
     });
   });
   function toArray(node) {
-    return Object.values(node.children).
-    sort((a, b) => a.type !== b.type ? a.type === 'tree' ? -1 : 1 : a.name.localeCompare(b.name)).
-    map((child) => ({ name: child.name, type: child.type, size: child.size, children: child.type === 'tree' ? toArray(child) : undefined }));
+    return Object.values(node.children)
+      .sort((a, b) => a.type !== b.type ? (a.type === 'tree' ? -1 : 1) : a.name.localeCompare(b.name))
+      .map(child => ({ name: child.name, type: child.type, size: child.size, children: child.type === 'tree' ? toArray(child) : undefined }));
   }
   return toArray(root);
 }
 
 function analyzeArchitecture(tree, stack) {
-  const paths = tree.map((f) => f.path.toLowerCase());
-  const has = (...names) => names.some((n) => paths.some((p) => p.includes(n)));
+  const paths = tree.map(f => f.path.toLowerCase());
+  const has = (...names) => names.some(n => paths.some(p => p.includes(n)));
   const nodes = [];
 
   const hasFrontend = has('components/', 'pages/', 'app/', 'views/', 'src/');
@@ -167,28 +167,28 @@ function analyzeArchitecture(tree, stack) {
   const hasDocker = has('dockerfile', 'docker-compose');
   const hasTests = has('__tests__', 'spec/', '.test.', '.spec.');
 
-  if (hasFrontend) nodes.push({ id: 'frontend', label: 'Frontend', type: 'frontend', description: 'User interface layer', files: tree.filter((f) => /(components|pages|app|views)\//.test(f.path)).map((f) => f.path).slice(0, 5) });
-  if (hasBackend) nodes.push({ id: 'backend', label: 'Backend', type: 'backend', description: 'API and business logic layer', files: tree.filter((f) => /(routes|controllers|services|api)\//.test(f.path)).map((f) => f.path).slice(0, 5) });
-  if (hasDB) nodes.push({ id: 'database', label: 'Database', type: 'database', description: 'Data persistence layer', files: tree.filter((f) => /(prisma|models|schema|migrations)\//.test(f.path)).map((f) => f.path).slice(0, 5) });
-  if (hasAuth) nodes.push({ id: 'auth', label: 'Authentication', type: 'auth', description: 'Identity and access control', files: tree.filter((f) => /auth\//.test(f.path)).map((f) => f.path).slice(0, 5) });
-  if (hasDocker) nodes.push({ id: 'infra', label: 'Infrastructure', type: 'infra', description: 'Containerization and deployment', files: tree.filter((f) => /dockerfile|docker-compose/.test(f.path.toLowerCase())).map((f) => f.path).slice(0, 5) });
-  if (hasTests) nodes.push({ id: 'testing', label: 'Testing', type: 'testing', description: 'Automated test suite', files: tree.filter((f) => /(__tests__|\.test\.|\.spec\.)/.test(f.path)).map((f) => f.path).slice(0, 5) });
+  if (hasFrontend) nodes.push({ id: 'frontend', label: 'Frontend', type: 'frontend', description: 'User interface layer', files: tree.filter(f => /(components|pages|app|views)\//.test(f.path)).map(f => f.path).slice(0, 5) });
+  if (hasBackend) nodes.push({ id: 'backend', label: 'Backend', type: 'backend', description: 'API and business logic layer', files: tree.filter(f => /(routes|controllers|services|api)\//.test(f.path)).map(f => f.path).slice(0, 5) });
+  if (hasDB) nodes.push({ id: 'database', label: 'Database', type: 'database', description: 'Data persistence layer', files: tree.filter(f => /(prisma|models|schema|migrations)\//.test(f.path)).map(f => f.path).slice(0, 5) });
+  if (hasAuth) nodes.push({ id: 'auth', label: 'Authentication', type: 'auth', description: 'Identity and access control', files: tree.filter(f => /auth\//.test(f.path)).map(f => f.path).slice(0, 5) });
+  if (hasDocker) nodes.push({ id: 'infra', label: 'Infrastructure', type: 'infra', description: 'Containerization and deployment', files: tree.filter(f => /dockerfile|docker-compose/.test(f.path.toLowerCase())).map(f => f.path).slice(0, 5) });
+  if (hasTests) nodes.push({ id: 'testing', label: 'Testing', type: 'testing', description: 'Automated test suite', files: tree.filter(f => /(__tests__|\.test\.|\.spec\.)/.test(f.path)).map(f => f.path).slice(0, 5) });
 
   return nodes;
 }
 
 function analyzeSecuritySignals(tree, deps) {
-  const paths = tree.map((f) => f.path);
+  const paths = tree.map(f => f.path);
   const signals = [];
   const criticalLeaks = [];
   let score = 100;
 
-
-  const exposedEnvFiles = paths.filter((p) => /(^|\/)\.env(\.(local|prod|production|staging|dev))?$/i.test(p) && !p.includes('.example') && !p.includes('.template'));
-  const exposedKeyFiles = paths.filter((p) => /(id_rsa|id_ed25519|credentials\.json|serviceAccountKey\.json|\.pem|\.pfx|\.keystore)$/i.test(p));
+  // 1. Secret & Sensitive File Leak Detection
+  const exposedEnvFiles = paths.filter(p => /(^|\/)\.env(\.(local|prod|production|staging|dev))?$/i.test(p) && !p.includes('.example') && !p.includes('.template'));
+  const exposedKeyFiles = paths.filter(p => /(id_rsa|id_ed25519|credentials\.json|serviceAccountKey\.json|\.pem|\.pfx|\.keystore)$/i.test(p));
 
   if (exposedEnvFiles.length > 0) {
-    exposedEnvFiles.forEach((f) => {
+    exposedEnvFiles.forEach(f => {
       criticalLeaks.push({
         file: f,
         leakType: 'Exposed Environment File',
@@ -206,7 +206,7 @@ function analyzeSecuritySignals(tree, deps) {
   }
 
   if (exposedKeyFiles.length > 0) {
-    exposedKeyFiles.forEach((f) => {
+    exposedKeyFiles.forEach(f => {
       criticalLeaks.push({
         file: f,
         leakType: 'Private RSA/SSL Key File',
@@ -223,13 +223,13 @@ function analyzeSecuritySignals(tree, deps) {
     score -= 40;
   }
 
-  const hasEnvExample = paths.some((p) => /\.env\.example/i.test(p));
-  const hasAuth = paths.some((p) => /auth|jwt|oauth|passport/i.test(p));
-  const hasHelmet = deps.prod.some((d) => d.name === 'helmet');
-  const hasRateLimit = deps.prod.some((d) => /rate.?limit/i.test(d.name));
-  const hasDotenvInProd = deps.prod.some((d) => d.name === 'dotenv');
-  const hasCors = deps.prod.some((d) => d.name === 'cors');
-  const hasGithubActions = paths.some((p) => p.startsWith('.github/workflows'));
+  const hasEnvExample = paths.some(p => /\.env\.example/i.test(p));
+  const hasAuth = paths.some(p => /auth|jwt|oauth|passport/i.test(p));
+  const hasHelmet = deps.prod.some(d => d.name === 'helmet');
+  const hasRateLimit = deps.prod.some(d => /rate.?limit/i.test(d.name));
+  const hasDotenvInProd = deps.prod.some(d => d.name === 'dotenv');
+  const hasCors = deps.prod.some(d => d.name === 'cors');
+  const hasGithubActions = paths.some(p => p.startsWith('.github/workflows'));
 
   if (!hasEnvExample) {
     signals.push({
@@ -251,7 +251,7 @@ function analyzeSecuritySignals(tree, deps) {
     score -= 5;
   }
 
-  if (!hasHelmet && deps.prod.some((d) => d.name === 'express')) {
+  if (!hasHelmet && deps.prod.some(d => d.name === 'express')) {
     signals.push({
       severity: 'warning',
       title: 'HTTP Security Headers missing (Helmet)',
@@ -261,7 +261,7 @@ function analyzeSecuritySignals(tree, deps) {
     score -= 10;
   }
 
-  if (!hasRateLimit && deps.prod.some((d) => d.name === 'express')) {
+  if (!hasRateLimit && deps.prod.some(d => d.name === 'express')) {
     signals.push({
       severity: 'warning',
       title: 'No rate limiting middleware detected',
@@ -303,26 +303,26 @@ function analyzeSecuritySignals(tree, deps) {
 }
 
 function analyzePerformance(tree) {
-  const files = tree.filter((f) => f.type === 'blob' && f.size > 0);
-  const largest = [...files].sort((a, b) => b.size - a.size).slice(0, 10).map((f) => ({ path: f.path, size: f.size, ext: f.path.includes('.') ? f.path.split('.').pop() : '' }));
-  const hasLazyRoutes = tree.some((f) => /lazy|dynamic|import\(/.test(f.path.toLowerCase()));
+  const files = tree.filter(f => f.type === 'blob' && f.size > 0);
+  const largest = [...files].sort((a, b) => b.size - a.size).slice(0, 10).map(f => ({ path: f.path, size: f.size, ext: f.path.includes('.') ? f.path.split('.').pop() : '' }));
+  const hasLazyRoutes = tree.some(f => /lazy|dynamic|import\(/.test(f.path.toLowerCase()));
   const totalSize = files.reduce((a, b) => a + (b.size || 0), 0);
   const avgSize = files.length > 0 ? Math.round(totalSize / files.length) : 0;
 
-  const imageFiles = files.filter((f) => /\.(png|jpg|jpeg|gif|svg|webp|ico)$/.test(f.path));
+  const imageFiles = files.filter(f => /\.(png|jpg|jpeg|gif|svg|webp|ico)$/.test(f.path));
   const totalImageSize = imageFiles.reduce((a, b) => a + (b.size || 0), 0);
 
   return { largest, hasLazyRoutes, totalSize, avgSize, imageFiles: imageFiles.length, totalImageSize, fileCount: files.length };
 }
 
 function analyzeCodeHealth(tree) {
-  const files = tree.filter((f) => f.type === 'blob');
-  const byExt = (ext) => files.filter((f) => f.path.endsWith(ext)).length;
-  const matching = (pattern) => files.filter((f) => pattern.test(f.path)).length;
+  const files = tree.filter(f => f.type === 'blob');
+  const byExt = (ext) => files.filter(f => f.path.endsWith(ext)).length;
+  const matching = (pattern) => files.filter(f => pattern.test(f.path)).length;
 
   return {
     totalFiles: files.length,
-    totalDirs: tree.filter((f) => f.type === 'tree').length,
+    totalDirs: tree.filter(f => f.type === 'tree').length,
     components: matching(/\/(components?|ui|widgets)\//i),
     hooks: matching(/use[A-Z][a-zA-Z]+\.(ts|tsx|js|jsx)$/),
     tests: matching(/\.(test|spec)\.(ts|tsx|js|jsx)$/),
@@ -331,9 +331,9 @@ function analyzeCodeHealth(tree) {
     cssFiles: byExt('.css') + byExt('.scss') + byExt('.sass'),
     configFiles: matching(/\.(config|rc)\.(js|ts|json|yaml|yml)$/),
     hasTests: matching(/\.(test|spec)\.(ts|tsx|js|jsx)$/) > 0,
-    hasLinting: files.some((f) => /\.eslintrc|\.prettierrc/.test(f.path)),
+    hasLinting: files.some(f => /\.eslintrc|\.prettierrc/.test(f.path)),
     hasTypeScript: byExt('.ts') + byExt('.tsx') > 0,
-    hasDocumentation: files.some((f) => /readme|contributing|changelog/i.test(f.path))
+    hasDocumentation: files.some(f => /readme|contributing|changelog/i.test(f.path)),
   };
 }
 
@@ -365,7 +365,7 @@ router.get('/scan', async (req, res) => {
       open_issues: meta.open_issues_count, private: meta.private, visibility: meta.visibility,
       default_branch: meta.default_branch, created_at: meta.created_at, updated_at: meta.updated_at,
       pushed_at: meta.pushed_at, size_kb: meta.size, homepage: meta.homepage || '',
-      topics: meta.topics || [], license: meta.license?.name || null, html_url: meta.html_url
+      topics: meta.topics || [], license: meta.license?.name || null, html_url: meta.html_url,
     };
     sendStep(res, 1, 'Repository metadata fetched', 10, { done: true });
 
@@ -376,34 +376,34 @@ router.get('/scan', async (req, res) => {
       fileTree = treeData.tree || [];
       report.tree = buildDisplayTree(fileTree);
       report.metrics = {
-        total_files: fileTree.filter((f) => f.type === 'blob').length,
-        total_dirs: fileTree.filter((f) => f.type === 'tree').length,
-        total_size_kb: Math.round(fileTree.filter((f) => f.size).reduce((a, b) => a + (b.size || 0), 0) / 1024),
-        truncated: treeData.truncated || false
+        total_files: fileTree.filter(f => f.type === 'blob').length,
+        total_dirs: fileTree.filter(f => f.type === 'tree').length,
+        total_size_kb: Math.round(fileTree.filter(f => f.size).reduce((a, b) => a + (b.size || 0), 0) / 1024),
+        truncated: treeData.truncated || false,
       };
-    } catch {report.tree = [];report.metrics = { total_files: 0, total_dirs: 0, total_size_kb: 0, truncated: false };}
+    } catch { report.tree = []; report.metrics = { total_files: 0, total_dirs: 0, total_size_kb: 0, truncated: false }; }
     sendStep(res, 2, `File tree read (${report.metrics.total_files} files)`, 22, { done: true });
 
     sendStep(res, 3, 'Analyzing language breakdown', 25);
     try {
       const langs = await ghFetch(`/repos/${owner}/${repo}/languages`, token);
       const total = Object.values(langs).reduce((a, b) => a + b, 0);
-      report.languages = Object.entries(langs).map(([name, bytes]) => ({ name, bytes, percent: Math.round(bytes / total * 1000) / 10 })).sort((a, b) => b.bytes - a.bytes);
-    } catch {report.languages = [];}
+      report.languages = Object.entries(langs).map(([name, bytes]) => ({ name, bytes, percent: Math.round((bytes / total) * 1000) / 10 })).sort((a, b) => b.bytes - a.bytes);
+    } catch { report.languages = []; }
     sendStep(res, 3, `Languages analyzed (${report.languages.length} found)`, 32, { done: true });
 
     sendStep(res, 4, 'Fetching contributors', 35);
     try {
       const contribs = await ghFetch(`/repos/${owner}/${repo}/contributors?per_page=8`, token);
-      report.contributors = contribs.map((c) => ({ login: c.login, avatar_url: c.avatar_url, html_url: c.html_url, contributions: c.contributions }));
-    } catch {report.contributors = [];}
+      report.contributors = contribs.map(c => ({ login: c.login, avatar_url: c.avatar_url, html_url: c.html_url, contributions: c.contributions }));
+    } catch { report.contributors = []; }
     sendStep(res, 4, `Contributors fetched (${report.contributors.length})`, 42, { done: true });
 
     sendStep(res, 5, 'Scanning dependencies', 45);
     report.dependencies = { prod: [], dev: [], type: null };
     for (const { path, type } of [{ path: 'package.json', type: 'package.json' }, { path: 'requirements.txt', type: 'requirements.txt' }, { path: 'go.mod', type: 'go.mod' }, { path: 'pubspec.yaml', type: 'pubspec.yaml' }]) {
       const content = await ghFileContent(owner, repo, path, token);
-      if (content) {report.dependencies = { ...parseDependencies(content, type), type };break;}
+      if (content) { report.dependencies = { ...parseDependencies(content, type), type }; break; }
     }
     sendStep(res, 5, `Dependencies found (${report.dependencies.prod.length + report.dependencies.dev.length})`, 52, { done: true });
 
@@ -411,7 +411,7 @@ router.get('/scan', async (req, res) => {
     report.readme = null;
     for (const p of ['README.md', 'readme.md', 'Readme.md', 'README.mdx']) {
       const content = await ghFileContent(owner, repo, p, token);
-      if (content) {report.readme = content;break;}
+      if (content) { report.readme = content; break; }
     }
     sendStep(res, 6, report.readme ? 'README loaded' : 'No README found', 62, { done: true });
 
@@ -429,7 +429,7 @@ router.get('/scan', async (req, res) => {
     report.performance = analyzePerformance(fileTree);
     report.codeHealth = analyzeCodeHealth(fileTree);
     const extCounts = {};
-    fileTree.filter((f) => f.type === 'blob').forEach((f) => {
+    fileTree.filter(f => f.type === 'blob').forEach(f => {
       const ext = f.path.includes('.') ? '.' + f.path.split('.').pop().toLowerCase() : 'no-ext';
       extCounts[ext] = (extCounts[ext] || 0) + 1;
     });
@@ -437,7 +437,7 @@ router.get('/scan', async (req, res) => {
     sendStep(res, 9, 'Analysis complete', 92, { done: true });
 
     sendStep(res, 10, 'Compiling full report', 96);
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise(r => setTimeout(r, 200));
     sendStep(res, 10, 'Report ready', 100, { done: true });
 
     sendEvent(res, { step: 'DONE', report });
