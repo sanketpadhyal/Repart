@@ -6,19 +6,19 @@ import SectionHeader from '../shared/SectionHeader.tsx';
 import ExplainCard from '../shared/ExplainCard.tsx';
 import StatCard from '../shared/StatCard.tsx';
 
-export default function Performance({ report }: { report: any }) {
+export default function Performance({ report }: {report: any;}) {
   const perf = report?.performance || {};
   const largest = perf.largest || [];
-  
+
   const totalSize = perf.totalSize || 0;
   const formattedSize = totalSize > 1024 * 1024 ? `${(totalSize / 1024 / 1024).toFixed(1)} MB` : `${(totalSize / 1024).toFixed(0)} KB`;
-  
+
   const topLargest = largest.slice(0, 10);
   const chartData = largest.slice(0, 8).map((f: any) => ({
     name: f.path?.split('/').pop() || f.path || '—',
     sizeKB: Math.round(f.size / 1024) || 0
   }));
-  
+
   const maxFile = largest[0]?.size || 1;
 
   return (
@@ -34,8 +34,8 @@ export default function Performance({ report }: { report: any }) {
 
       <div className="rp-card">
         <h3>Top Largest Files</h3>
-        {chartData.length > 0 && (
-          <div className="rp-chart-container" style={{ height: 300 }}>
+        {chartData.length > 0 &&
+        <div className="rp-chart-container" style={{ height: 300 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} layout="vertical" margin={{ left: 50 }}>
                 <XAxis type="number" />
@@ -45,41 +45,41 @@ export default function Performance({ report }: { report: any }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-        )}
+        }
 
         <div className="rp-table-container">
           <table className="rp-table">
             <tbody>
-              {topLargest.map((file: any, i: number) => (
-                <tr key={i}>
+              {topLargest.map((file: any, i: number) =>
+              <tr key={i}>
                   <td className="rp-mono">{file.path?.split('/').slice(-2).join('/') || file.path}</td>
                   <td className="rp-text-right">{((file.size || 0) / 1024).toFixed(1)} KB</td>
                   <td><span className="rp-badge">{file.ext}</span></td>
                   <td style={{ width: '40%' }}>
                     <div className="rp-bar-bg">
-                      <div className="rp-bar-fill" style={{ width: `${((file.size || 0) / maxFile) * 100}%` }}></div>
+                      <div className="rp-bar-fill" style={{ width: `${(file.size || 0) / maxFile * 100}%` }}></div>
                     </div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
       <div className={`rp-card ${perf.hasLazyRoutes ? 'rp-success-card' : 'rp-warning-card'}`}>
-        {perf.hasLazyRoutes 
-          ? '✓ Lazy loading detected — dynamic imports improve initial load time'
-          : '⚠ No lazy loading detected — consider dynamic imports for large route components'
+        {perf.hasLazyRoutes ?
+        '✓ Lazy loading detected — dynamic imports improve initial load time' :
+        '⚠ No lazy loading detected — consider dynamic imports for large route components'
         }
       </div>
 
-      <ExplainCard 
+      <ExplainCard
         detected={`${perf.fileCount || 0} files, ${formattedSize} total`}
         explanation="Performance analysis examines file sizes, image assets, and code splitting patterns."
         whyItMatters="Large files increase build time. Unoptimized images increase page weight. Missing lazy loading hurts initial load time."
-        recommendation="Aim for average file size under 10KB. Optimize images with WebP format. Use dynamic imports for routes."
-      />
-    </motion.div>
-  );
+        recommendation="Aim for average file size under 10KB. Optimize images with WebP format. Use dynamic imports for routes." />
+      
+    </motion.div>);
+
 }

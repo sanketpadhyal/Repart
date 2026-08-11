@@ -9,63 +9,63 @@ import { InsightBox } from '../shared/InsightBox.tsx';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
-export const Overview = ({ report }: { report: any }) => {
+export const Overview = ({ report }: {report: any;}) => {
   const meta = report?.meta || {};
   const metrics = report?.metrics || {};
   const languages = report?.languages || [];
   const primaryLang = languages[0]?.name || 'Unknown';
-  
-  const sizeText = metrics.total_size_kb > 1024 
-    ? `${(metrics.total_size_kb / 1024).toFixed(1)} MB` 
-    : `${metrics.total_size_kb || 0} KB`;
+
+  const sizeText = metrics.total_size_kb > 1024 ?
+  `${(metrics.total_size_kb / 1024).toFixed(1)} MB` :
+  `${metrics.total_size_kb || 0} KB`;
 
   const pieData = languages.map((lang: any) => ({
     name: lang.name,
     value: lang.value
   }));
 
-  const langExplanation = primaryLang === 'TypeScript' 
-    ? 'TypeScript adds static typing which reduces runtime errors.' 
-    : primaryLang === 'Python' 
-      ? 'Python is commonly used for backend services, ML, and scripting.' 
-      : 'This language drives the core application logic.';
+  const langExplanation = primaryLang === 'TypeScript' ?
+  'TypeScript adds static typing which reduces runtime errors.' :
+  primaryLang === 'Python' ?
+  'Python is commonly used for backend services, ML, and scripting.' :
+  'This language drives the core application logic.';
 
   return (
-    <motion.div 
+    <motion.div
       className="rp-section"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.2 }}
-    >
-      <SectionHeader 
-        icon={Eye} 
-        title="Overview & Key Metrics" 
-        description="High-level repository statistics, security rating, and codebase scale" 
-      />
+      transition={{ duration: 0.2 }}>
+      
+      <SectionHeader
+        icon={Eye}
+        title="Overview & Key Metrics"
+        description="High-level repository statistics, security rating, and codebase scale" />
+      
 
-      {report?.security?.criticalLeaks && report.security.criticalLeaks.length > 0 && (
-        <div style={{
-          backgroundColor: '#fef2f2',
-          border: '1.5px solid #fca5a5',
-          borderRadius: '16px',
-          padding: '16px 20px',
-          marginBottom: '24px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px'
-        }}>
+      {report?.security?.criticalLeaks && report.security.criticalLeaks.length > 0 &&
+      <div style={{
+        backgroundColor: '#fef2f2',
+        border: '1.5px solid #fca5a5',
+        borderRadius: '16px',
+        padding: '16px 20px',
+        marginBottom: '24px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px'
+      }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#dc2626', fontWeight: 800, fontSize: '15px' }}>
             <AlertCircle size={20} />
             <span>CRITICAL SECURITY LEAK DETECTED</span>
           </div>
-          {report.security.criticalLeaks.map((leak: any, idx: number) => (
-            <div key={idx} style={{ background: '#ffffff', border: '1px solid #fecaca', padding: '10px 14px', borderRadius: '10px', fontSize: '13px' }}>
+          {report.security.criticalLeaks.map((leak: any, idx: number) =>
+        <div key={idx} style={{ background: '#ffffff', border: '1px solid #fecaca', padding: '10px 14px', borderRadius: '10px', fontSize: '13px' }}>
               <strong style={{ color: '#dc2626' }}>{leak.leakType}:</strong> <code style={{ background: '#fee2e2', padding: '2px 6px', borderRadius: '4px', color: '#991b1b' }}>{leak.file}</code>
               <p style={{ margin: '4px 0 0 0', color: '#7f1d1d', fontSize: '12px' }}>{leak.recommendation}</p>
             </div>
-          ))}
+        )}
         </div>
-      )}
+      }
 
       <div className="rp-grid-4">
         <StatCard title="Repository identifier" value={meta.name || 'Unknown'} icon={FileCode} />
@@ -95,11 +95,11 @@ export const Overview = ({ report }: { report: any }) => {
                 outerRadius={80}
                 fill="#8884d8"
                 paddingAngle={5}
-                dataKey="value"
-              >
-                {pieData.map((entry: any, index: number) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
+                dataKey="value">
+                
+                {pieData.map((entry: any, index: number) =>
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                )}
               </Pie>
               <Tooltip />
               <Legend />
@@ -111,15 +111,15 @@ export const Overview = ({ report }: { report: any }) => {
           detected={primaryLang}
           explanation={`This repository is primarily written in ${primaryLang}. ${langExplanation}`}
           whyItMatters="The primary language determines the toolchain, hiring requirements, and runtime behavior."
-          recommendation="Ensure all contributors are familiar with this language and its ecosystem conventions."
-        />
+          recommendation="Ensure all contributors are familiar with this language and its ecosystem conventions." />
+        
       </div>
 
       <InsightBox>
         {`${metrics.total_files || 0} files across ${metrics.total_dirs || 0} directories. ${report?.codeHealth?.hasTests ? 'Test files detected — good coverage hygiene.' : 'No test files detected — consider adding a testing framework.'}`}
       </InsightBox>
-    </motion.div>
-  );
+    </motion.div>);
+
 };
 
 export default Overview;

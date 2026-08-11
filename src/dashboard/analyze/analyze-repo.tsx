@@ -32,25 +32,25 @@ const AnalyzeRepo: React.FC<AnalyzeRepoProps> = ({ initialUrl = '' }) => {
       setError('Enter a valid GitHub URL like: https://github.com/user/repo');
       return;
     }
-    // Navigate to the result page with the repo URL as query param
+
     navigate(`/dashboard/analyze?repo=${encodeURIComponent(repoUrl.trim())}`);
   };
 
   const handlePaste = () => {
-    navigator.clipboard.readText().then(text => {
+    navigator.clipboard.readText().then((text) => {
       if (text) setRepoUrl(text.trim());
     }).catch(() => {});
   };
 
   const exampleRepos = [
-    { label: 'facebook/react', url: 'https://github.com/facebook/react' },
-    { label: 'vercel/next.js', url: 'https://github.com/vercel/next.js' },
-    { label: 'tailwindlabs/tailwindcss', url: 'https://github.com/tailwindlabs/tailwindcss' },
-  ];
+  { label: 'facebook/react', url: 'https://github.com/facebook/react' },
+  { label: 'vercel/next.js', url: 'https://github.com/vercel/next.js' },
+  { label: 'tailwindlabs/tailwindcss', url: 'https://github.com/tailwindlabs/tailwindcss' }];
+
 
   return (
     <div className="analyze-page">
-      {/* Hero */}
+      {}
       <div className="analyze-hero">
         <h1 className="analyze-title">
           Analyze Any
@@ -61,7 +61,7 @@ const AnalyzeRepo: React.FC<AnalyzeRepoProps> = ({ initialUrl = '' }) => {
         </p>
       </div>
 
-      {/* Big Search Form */}
+      {}
       <form className="analyze-form" onSubmit={handleSubmit}>
         <div className={`analyze-input-wrap ${isFocused ? 'focused' : ''} ${error ? 'has-error' : ''}`}>
           <div className="analyze-input-icon">
@@ -76,25 +76,25 @@ const AnalyzeRepo: React.FC<AnalyzeRepoProps> = ({ initialUrl = '' }) => {
             className="analyze-input"
             placeholder="https://github.com/username/repository"
             value={repoUrl}
-            onChange={e => { setRepoUrl(e.target.value); setError(''); }}
+            onChange={(e) => {setRepoUrl(e.target.value);setError('');}}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             autoComplete="off"
-            spellCheck={false}
-          />
+            spellCheck={false} />
+          
 
-          {!repoUrl && (
-            <button type="button" className="analyze-paste-btn" onClick={handlePaste} tabIndex={-1}>
+          {!repoUrl &&
+          <button type="button" className="analyze-paste-btn" onClick={handlePaste} tabIndex={-1}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
               Paste
             </button>
-          )}
+          }
 
-          {repoUrl && (
-            <button type="button" className="analyze-clear-btn" onClick={() => { setRepoUrl(''); setError(''); inputRef.current?.focus(); }} tabIndex={-1}>
+          {repoUrl &&
+          <button type="button" className="analyze-clear-btn" onClick={() => {setRepoUrl('');setError('');inputRef.current?.focus();}} tabIndex={-1}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
-          )}
+          }
 
           <button type="submit" className="analyze-submit-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
@@ -102,33 +102,33 @@ const AnalyzeRepo: React.FC<AnalyzeRepoProps> = ({ initialUrl = '' }) => {
           </button>
         </div>
 
-        {error && (
-          <p className="analyze-error">
+        {error &&
+        <p className="analyze-error">
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
             {error}
           </p>
-        )}
+        }
       </form>
 
-      {/* Example repos */}
+      {}
       <div className="analyze-examples">
         <span className="analyze-examples-label">Try an example:</span>
         <div className="analyze-example-chips">
-          {exampleRepos.map(r => (
-            <button
-              key={r.url}
-              type="button"
-              className="analyze-example-chip"
-              onClick={() => { setRepoUrl(r.url); setError(''); inputRef.current?.focus(); }}
-            >
+          {exampleRepos.map((r) =>
+          <button
+            key={r.url}
+            type="button"
+            className="analyze-example-chip"
+            onClick={() => {setRepoUrl(r.url);setError('');inputRef.current?.focus();}}>
+            
               <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
               {r.label}
             </button>
-          ))}
+          )}
         </div>
       </div>
 
-      {/* Feature tags */}
+      {}
       <div className="analyze-features">
         <div className="analyze-feature-tag">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></svg>
@@ -151,8 +151,8 @@ const AnalyzeRepo: React.FC<AnalyzeRepoProps> = ({ initialUrl = '' }) => {
           <span>Code Metrics</span>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default AnalyzeRepo;

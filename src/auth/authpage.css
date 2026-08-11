@@ -11,7 +11,6 @@
   padding: 16px;
   animation: fadeIn 0.3s ease-out;
 }
-
 .auth-panel {
   background-color: #fdfdfb;
   width: 100%;
@@ -23,7 +22,6 @@
   animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   box-sizing: border-box;
 }
-
 .auth-close-btn {
   position: absolute;
   top: 24px;
@@ -40,19 +38,16 @@
   color: #52525b;
   transition: background 0.2s, color 0.2s;
 }
-
 .auth-close-btn:hover {
   background: #e4e4e7;
   color: #18181b;
 }
-
 .auth-logo {
   width: 48px;
   height: 48px;
   object-fit: contain;
   margin-bottom: 24px;
 }
-
 .auth-title {
   font-family: 'Outfit', sans-serif;
   font-size: 32px;
@@ -61,22 +56,19 @@
   margin: 0 0 12px 0;
   letter-spacing: -0.02em;
 }
-
 .auth-logo-text {
   font-family: "Georgia", "Times New Roman", serif;
   font-size: 36px;
   font-weight: 500;
-  color: #8c6b22; /* Bronze/Gold color */
+  color: #8c6b22;
   letter-spacing: 0;
 }
-
 .auth-subtitle {
   font-size: 16px;
   color: #52525b;
   line-height: 1.5;
   margin: 0 0 40px 0;
 }
-
 .auth-github-btn {
   width: 100%;
   display: flex;
@@ -96,12 +88,10 @@
   -webkit-tap-highlight-color: transparent !important;
   outline: none !important;
 }
-
 .auth-github-btn:hover {
   background: #18181b;
   border-color: #18181b;
 }
-
 .auth-github-btn:active,
 .auth-github-btn.connecting {
   opacity: 0.65 !important;
@@ -109,7 +99,6 @@
   background: #27272a !important;
   border-color: #27272a !important;
 }
-
 .auth-btn-spinner {
   width: 18px;
   height: 18px;
@@ -118,23 +107,19 @@
   border-radius: 50%;
   animation: authSpin 0.7s linear infinite;
 }
-
 @keyframes authSpin {
   to { transform: rotate(360deg); }
 }
-
 .auth-footer-text {
   text-align: center;
   font-size: 14px;
   color: #71717a;
   margin: 32px 0 0 0;
 }
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
 @keyframes scaleUp {
   from {
     opacity: 0;
@@ -145,7 +130,6 @@
     transform: scale(1) translateY(0);
   }
 }
-
 @media (max-width: 480px) {
   .auth-panel {
     padding: 32px 24px;

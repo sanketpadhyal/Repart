@@ -32,7 +32,7 @@ export default function DeveloperDuelFeature() {
           Compare any two GitHub developers head-to-head. Evaluates both open-source popularity and pure engineering work quality regardless of follower counts.
         </p>
 
-        {/* Mock Duel Card Preview with SVG icons */}
+        {}
         <div className="duel-mock-card">
           <div className="mock-card-top">
             <div className="mock-user-box left">
@@ -80,6 +80,6 @@ export default function DeveloperDuelFeature() {
           </button>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
