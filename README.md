@@ -9,18 +9,18 @@
 </p>
 
 <p align="center">
-  <a href="https://repartgit.netlify.app">Website</a>
+  <a href="https://repart.sanketpadhyal.in">Website</a>
   |
-  <a href="https://repartgit.netlify.app/dashboard">Dashboard</a>
+  <a href="https://repart.sanketpadhyal.in/dashboard">Dashboard</a>
   |
-  <a href="https://repartgit.netlify.app/developers">Developers Page</a>
+  <a href="https://repart.sanketpadhyal.in/developers">Developers Page</a>
 </p>
 
 <p align="center">
-  <a href="https://repartgit.netlify.app">
+  <a href="https://repart.sanketpadhyal.in">
     <img src="https://img.shields.io/badge/Live_Website-repartgit.netlify.app-00C853?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Website" />
   </a>
-  <a href="https://repartgit.netlify.app/dashboard">
+  <a href="https://repart.sanketpadhyal.in/dashboard">
     <img src="https://img.shields.io/badge/Dashboard-Open_Platform-111827?style=for-the-badge&logo=react&logoColor=61DAFB" alt="Dashboard" />
   </a>
   <a href="https://github.com/sanketpadhyal/Repart">
@@ -49,9 +49,9 @@ This repository contains the open-source codebase for the full-stack web applica
 
 | Product Surface | Link |
 | --- | --- |
-| Live Website | [repartgit.netlify.app](https://repartgit.netlify.app) |
-| Cloud Dashboard | [repartgit.netlify.app/dashboard](https://repartgit.netlify.app/dashboard) |
-| Developers Page | [repartgit.netlify.app/developers](https://repartgit.netlify.app/developers) |
+| Live Website | [repartgit.netlify.app](https://repart.sanketpadhyal.in) |
+| Cloud Dashboard | [repartgit.netlify.app/dashboard](https://repart.sanketpadhyal.in/dashboard) |
+| Developers Page | [repartgit.netlify.app/developers](https://repart.sanketpadhyal.in/developers) |
 | GitHub Repository | [sanketpadhyal/Repart](https://github.com/sanketpadhyal/Repart) |
 
 ## What Happens During Codebase Analysis
@@ -221,4 +221,4 @@ Developed by **Sanket Padhyal**.
 
 - **Personal Website**: [www.sanketpadhyal.in](https://www.sanketpadhyal.in)
 - **GitHub**: [@sanketpadhyal](https://github.com/sanketpadhyal)
-- **Live Platform**: [repartgit.netlify.app](https://repartgit.netlify.app)
+- **Live Platform**: [repartgit.netlify.app](https://repart.sanketpadhyal.in)
