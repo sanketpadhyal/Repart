@@ -2,7 +2,7 @@
   <img src="public/assets/logo.png" alt="Repart Logo" width="96" />
 </p>
 
-<h1 align="center">Repart</h1>
+<h1 align="center">Repart.</h1>
 
 <p align="center">
   A modern, high-performance developer intelligence & codebase visualization platform — supporting automated repository analysis, multi-tier layer detection (Frontend, Backend, Database, Auth, Testing), interactive architecture diagrams, API & schema exploration, contribution heatmap analytics, security hygiene audits, and side-by-side developer comparison.
